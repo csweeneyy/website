@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -7,49 +8,68 @@
   <meta name="description" content="Connor Sweeney — Entrepreneur, AI Systems Engineer, and consultant." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap"
+    rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
 
-  <!-- Loading Screen -->
+  <!-- ═══ Loading Overlay ═══ -->
   <div class="loader" id="loader">
-    <div class="loader__logo">
-      <svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg" class="loader__svg">
-        <!-- Top chevron -->
-        <polyline class="loader__line loader__line--1" points="15,8 50,28 85,8" />
-        <!-- Lightning bolt -->
-        <path class="loader__bolt" d="M58,22 L28,56 L44,52 L22,90 L72,48 L52,54 Z" />
-        <!-- Bottom chevron -->
-        <polyline class="loader__line loader__line--2" points="15,112 50,92 85,112" />
-      </svg>
-    </div>
+    <!-- Dark background — will be covered by white panels -->
+    <div class="loader__panel loader__panel--top" id="panel-top"></div>
+    <div class="loader__panel loader__panel--bot" id="panel-bot"></div>
+
+    <!-- Animated letters -->
+    <span class="loader__letter loader__letter--c" id="letter-c">C</span>
+    <span class="loader__letter loader__letter--s" id="letter-s">S</span>
   </div>
 
-  <!-- Crosshair cursor -->
+  <!-- ═══ Crosshair cursor ═══ -->
   <div class="crosshair crosshair--v" id="crosshair-v"></div>
   <div class="crosshair crosshair--h" id="crosshair-h"></div>
 
-  <!-- Header -->
-  <header class="header">
-    <nav class="nav">
+  <!-- ═══ Header ═══ -->
+  <header class="header" id="header">
+    <nav class="nav" id="nav">
       <a href="#interests" class="nav-link">Interests</a>
-      <a href="#travel" class="nav-link">Travel Blog</a>
+      <a href="travel.html" class="nav-link">Travel Blog</a>
       <a href="#contact" class="nav-link">Contact</a>
-      <a href="#work" class="nav-link nav-link--accent">Work With Me</a>
+      <a href="work.html" class="nav-link nav-link--accent">Work With Me</a>
     </nav>
   </header>
 
-  <!-- Main Content -->
-  <main class="main">
-    <!-- Name -->
-    <section class="hero">
-      <h1 class="hero__name">Connor Sweeney</h1>
+  <!-- ═══ Main Content ═══ -->
+  <main class="main" id="main-content">
+    <!-- Name — left side -->
+    <section class="hero" id="hero">
+      <h1 class="hero__name">
+        <span class="hero__line">
+          <span class="hero__char hero__char--c">C</span><span class="hero__char" data-reveal>O</span><span
+            class="hero__char" data-reveal>N</span><span class="hero__char" data-reveal>N</span><span class="hero__char"
+            data-reveal>O</span><span class="hero__char" data-reveal>R</span>
+        </span>
+        <span class="hero__line">
+          <span class="hero__char hero__char--s">S</span><span class="hero__char" data-reveal>W</span><span
+            class="hero__char" data-reveal>E</span><span class="hero__char" data-reveal>E</span><span class="hero__char"
+            data-reveal>N</span><span class="hero__char" data-reveal>E</span><span class="hero__char"
+            data-reveal>Y</span>
+        </span>
+      </h1>
       <p class="hero__tagline">Entrepreneur · AI Systems · Consulting</p>
+      <div class="hero__bio">
+        <p class="hero__bio-line"><span class="hero__bio-prompt">&gt;</span> I'm Connor; a builder, entrepreneur, and self proclaimed philomath.</p>
+        <p class="hero__bio-line"><span class="hero__bio-prompt">&gt;</span> I have experience working at startups as an AI systems engineer building products that automate entire workflows.</p>
+        <p class="hero__bio-line"><span class="hero__bio-prompt">&gt;</span> Currently exploring the intersection of AI, health/biotech, and entrepreneurship.</p>
+        <p class="hero__bio-line"><span class="hero__bio-prompt">&gt;</span> Open to consulting, contract work, and interesting collaborations.</p>
+        <p class="hero__bio-line"><span class="hero__bio-prompt">&gt;</span> I attend Washington & Lee University, where I study Computer Science and Economics.</p>
+      </div>
     </section>
 
-    <!-- Cards Grid -->
-    <section class="grid">
+    <!-- Cards Grid — right / center -->
+    <section class="grid" id="grid">
 
       <a href="https://vibeticker.com" target="_blank" rel="noopener" class="card card--vibeticker">
         <div class="card__accent"></div>
@@ -65,13 +85,14 @@
         <div class="card__accent"></div>
         <div class="card__content">
           <span class="card__label">Intelligence</span>
-          <h2 class="card__title">Swell / BuildMoney</h2>
+          <h2 class="card__title">Swell Market Intelligence</h2>
           <p class="card__desc">AI-powered market intelligence across 170k+ subreddit communities.</p>
         </div>
         <span class="card__arrow">↗</span>
       </a>
 
-      <a href="https://globalteachingproject.com/about-us/our-2025-2026-gtp-teaching-assistants-2/" target="_blank" rel="noopener" class="card card--teaching">
+      <a href="https://globalteachingproject.com/about-us/our-2025-2026-gtp-teaching-assistants-2/" target="_blank"
+        rel="noopener" class="card card--teaching">
         <div class="card__accent"></div>
         <div class="card__content">
           <span class="card__label">Education</span>
@@ -96,7 +117,7 @@
         <div class="card__content">
           <span class="card__label">Stealth</span>
           <h2 class="card__title">Bio Tech Startup</h2>
-          <p class="card__desc">Building the future of human optimization. More soon.</p>
+          <p class="card__desc">Building the future of human optimization through bioindividuality. More soon.</p>
         </div>
       </div>
 
@@ -112,21 +133,13 @@
     </section>
   </main>
 
-  <!-- Footer -->
+  <!-- ═══ Footer ═══ -->
   <footer class="footer" id="contact">
     <div class="footer__inner">
       <div class="footer__about">
-        <h3 class="footer__heading">About</h3>
+        <h3 class="footer__heading">Info</h3>
         <p class="footer__bio">
-          I'm Connor; a builder, entrepreneur, and self proclaimed philomath.
-          <br><br>
-          I have experience working at startups as an AI systems engineer building products that
-          automate entire workflows. Currently exploring the intersection of AI, health/biotech, and
-          entrepreneurship.
-          <br><br>
-          Open to consulting, contract work, and interesting collaborations.
-          <br>
-          I attend Washington & Lee University, where I study Computer Science and Economics.
+          Placeholder for additional info, announcements, or updates.
         </p>
       </div>
 
@@ -135,26 +148,31 @@
         <div class="footer__socials">
           <a href="https://github.com/csweeneyy" target="_blank" rel="noopener" class="footer__social">
             <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
-              <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+              <path
+                d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
             </svg>
             <span>GitHub</span>
           </a>
-          <a href="https://www.linkedin.com/in/connor-sweeney-13b01124a/" target="_blank" rel="noopener" class="footer__social">
+          <a href="https://www.linkedin.com/in/connor-sweeney-13b01124a/" target="_blank" rel="noopener"
+            class="footer__social">
             <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
-              <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+              <path
+                d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
             </svg>
             <span>LinkedIn</span>
           </a>
           <a href="#" target="_blank" rel="noopener" class="footer__social">
             <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
-              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+              <path
+                d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
             </svg>
             <span>X / Twitter</span>
           </a>
           <a href="mailto:cpsweeney@mail.wlu.edu" class="footer__social">
             <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
-              <path d="M1.5 8.67v8.58a3 3 0 003 3h15a3 3 0 003-3V8.67l-8.928 5.493a3 3 0 01-3.144 0L1.5 8.67z"/>
-              <path d="M22.5 6.908V6.75a3 3 0 00-3-3h-15a3 3 0 00-3 3v.158l9.714 5.978a1.5 1.5 0 001.572 0L22.5 6.908z"/>
+              <path d="M1.5 8.67v8.58a3 3 0 003 3h15a3 3 0 003-3V8.67l-8.928 5.493a3 3 0 01-3.144 0L1.5 8.67z" />
+              <path
+                d="M22.5 6.908V6.75a3 3 0 00-3-3h-15a3 3 0 00-3 3v.158l9.714 5.978a1.5 1.5 0 001.572 0L22.5 6.908z" />
             </svg>
             <span>Email</span>
           </a>
@@ -162,11 +180,10 @@
       </div>
     </div>
 
-    <div class="footer__bottom">
-      <p>© 2026 Connor Sweeney</p>
-    </div>
+
   </footer>
 
   <script src="script.js"></script>
 </body>
+
 </html>

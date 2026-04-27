@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Connor Sweeney</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap"
+    rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #5F5B6B;
+      --text: #EDF2EF;
+      --muted: #9e9aaa;
+      --accent: #32936F;
+      --border: rgba(237, 242, 239, 0.12);
+      --font: "Space Mono", "SF Mono", monospace;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { height: 100%; -webkit-font-smoothing: antialiased; cursor: none; }
+
+    body {
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 24px;
+      cursor: none;
+    }
+
+    a, button, input, select, textarea { cursor: none; }
+
+    /* ── Crosshair cursor ── */
+    .crosshair {
+      position: fixed;
+      z-index: 9999;
+      pointer-events: none;
+      background: rgba(237, 242, 239, 0.25);
+      transition: opacity 0.15s ease;
+    }
+    .crosshair--v { width: 1px; height: 100vh; top: 0; left: -1px; }
+    .crosshair--h { width: 100vw; height: 1px; left: 0; top: -1px; }
+    body.cursor-gone .crosshair { opacity: 0; }
+
+    a { color: inherit; text-decoration: none; }
+
+    .back {
+      position: fixed;
+      top: 28px;
+      left: 48px;
+      font-size: 11px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--muted);
+      transition: color 0.3s ease;
+    }
+    .back:hover { color: var(--text); }
+    .back::before { content: "← "; }
+
+    /* ── Form ── */
+    .form {
+      width: 100%;
+      max-width: 440px;
+    }
+
+    .row {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      margin-bottom: 28px;
+    }
+
+    .prompt {
+      color: var(--accent);
+      font-size: 14px;
+      flex-shrink: 0;
+      user-select: none;
+    }
+
+    .label {
+      font-size: 13px;
+      color: var(--muted);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .field {
+      flex: 1;
+      font-family: var(--font);
+      font-size: 13px;
+      color: var(--text);
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid var(--border);
+      padding: 4px 0;
+      outline: none;
+      transition: border-color 0.3s ease;
+    }
+
+    .field:focus { border-color: var(--accent); }
+    .field::placeholder { color: var(--muted); opacity: 0.5; }
+
+    /* ── Warning ── */
+    .warn {
+      font-size: 10px;
+      color: var(--accent);
+      letter-spacing: 0.06em;
+      margin-top: 6px;
+      margin-left: 24px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .warn.visible { opacity: 1; }
+
+    /* ── Submit ── */
+    .submit-row {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 8px;
+    }
+
+    .btn {
+      font-family: var(--font);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--bg);
+      background: var(--accent);
+      border: none;
+      padding: 10px 28px;
+      border-radius: 2px;
+      transition: opacity 0.3s ease;
+    }
+    .btn:hover { opacity: 0.85; }
+
+    @media (max-width: 500px) {
+      .back { top: 16px; left: 20px; }
+      .row { flex-wrap: wrap; gap: 4px; }
+      .field { width: 100%; }
+      .crosshair { display: none; }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Crosshair -->
+  <div class="crosshair crosshair--v" id="crosshair-v"></div>
+  <div class="crosshair crosshair--h" id="crosshair-h"></div>
+
+  <a href="index.html" class="back">Back</a>
+
+  <form class="form" id="form" action="https://formsubmit.co/cpsweeney@mail.wlu.edu" method="POST">
+    <input type="hidden" name="_subject" value="New inquiry from connorsweeney.com" />
+    <input type="hidden" name="_captcha" value="false" />
+
+    <div class="row">
+      <span class="prompt">&gt;</span>
+      <span class="label">contacting about</span>
+      <input class="field" type="text" name="about" id="about-field" placeholder="..." maxlength="60" required />
+    </div>
+    <div class="warn" id="about-warn">keep it simpler</div>
+
+    <div class="row">
+      <span class="prompt">&gt;</span>
+      <span class="label">name</span>
+      <input class="field" type="text" name="name" placeholder="..." required />
+    </div>
+
+    <div class="row">
+      <span class="prompt">&gt;</span>
+      <span class="label">email at</span>
+      <input class="field" type="email" name="email" placeholder="..." required />
+    </div>
+
+    <div class="submit-row">
+      <button class="btn" type="submit">Send →</button>
+    </div>
+  </form>
+
+  <script>
+    // Crosshair cursor
+    const crossV = document.getElementById("crosshair-v");
+    const crossH = document.getElementById("crosshair-h");
+    document.addEventListener("mousemove", (e) => {
+      crossV.style.left = e.clientX + "px";
+      crossH.style.top  = e.clientY + "px";
+    });
+    document.addEventListener("mouseenter", () => document.body.classList.remove("cursor-gone"));
+    document.addEventListener("mouseleave", () => document.body.classList.add("cursor-gone"));
+
+    // About field char limit
+    const aboutField = document.getElementById("about-field");
+    const aboutWarn = document.getElementById("about-warn");
+    aboutField.addEventListener("input", () => {
+      aboutWarn.classList.toggle("visible", aboutField.value.length > 50);
+    });
+    document.getElementById("form").addEventListener("submit", (e) => {
+      if (aboutField.value.length > 50) {
+        e.preventDefault();
+        aboutField.focus();
+      }
+    });
+  </script>
+</body>
+
+</html>

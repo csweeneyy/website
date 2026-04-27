@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Travel — Connor Sweeney</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #5F5B6B;
+      --text: #EDF2EF;
+      --muted: #9e9aaa;
+      --accent: #32936F;
+      --font: "Space Mono", "SF Mono", monospace;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { height: 100%; -webkit-font-smoothing: antialiased; cursor: none; }
+
+    body {
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 24px;
+      cursor: none;
+    }
+
+    a, button, input, select, textarea { cursor: none; }
+
+    /* ── Crosshair cursor ── */
+    .crosshair {
+      position: fixed;
+      z-index: 9999;
+      pointer-events: none;
+      background: rgba(237, 242, 239, 0.25);
+      transition: opacity 0.15s ease;
+    }
+    .crosshair--v { width: 1px; height: 100vh; top: 0; left: -1px; }
+    .crosshair--h { width: 100vw; height: 1px; left: 0; top: -1px; }
+    body.cursor-gone .crosshair { opacity: 0; }
+
+    a { color: inherit; text-decoration: none; }
+
+    .back {
+      position: fixed;
+      top: 28px;
+      left: 48px;
+      font-size: 11px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--muted);
+      transition: color 0.3s ease;
+      z-index: 10;
+    }
+    .back:hover { color: var(--text); }
+    .back::before { content: "← "; }
+
+    .label {
+      position: fixed;
+      top: 28px;
+      right: 48px;
+      font-size: 11px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--muted);
+      z-index: 10;
+    }
+
+    /* ── Map ── */
+    .map-wrap {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .map {
+      font-family: var(--font);
+      font-size: clamp(3.5px, 0.48vw, 7px);
+      line-height: 1.05;
+      letter-spacing: 0.02em;
+      color: rgba(237, 242, 239, 0.45);
+      white-space: pre;
+      user-select: none;
+    }
+
+    @media (max-width: 600px) {
+      .back { top: 16px; left: 20px; }
+      .label { top: 16px; right: 20px; }
+      .map { font-size: 3px; letter-spacing: 0.02em; }
+      .crosshair { display: none; }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Crosshair -->
+  <div class="crosshair crosshair--v" id="crosshair-v"></div>
+  <div class="crosshair crosshair--h" id="crosshair-h"></div>
+
+  <a href="index.html" class="back">Back</a>
+  <span class="label">Travel</span>
+
+  <div class="map-wrap">
+    <pre class="map" id="map"></pre>
+  </div>
+
+  <script>
+    // Crosshair cursor
+    const crossV = document.getElementById("crosshair-v");
+    const crossH = document.getElementById("crosshair-h");
+    document.addEventListener("mousemove", (e) => {
+      crossV.style.left = e.clientX + "px";
+      crossH.style.top  = e.clientY + "px";
+    });
+    document.addEventListener("mouseenter", () => document.body.classList.remove("cursor-gone"));
+    document.addEventListener("mouseleave", () => document.body.classList.add("cursor-gone"));
+
+    // Load map
+    fetch('worldmap.txt?v=' + Date.now())
+      .then(r => r.text())
+      .then(text => {
+        document.getElementById('map').textContent = text;
+      });
+  </script>
+</body>
+
+</html>
