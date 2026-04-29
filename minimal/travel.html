@@ -10,10 +10,11 @@
   <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --bg: #5F5B6B;
+      --bg: #544f64;
       --text: #EDF2EF;
       --muted: #9e9aaa;
       --accent: #32936F;
+      --yellow-accent: #fff200;
       --font: "Space Mono", "SF Mono", monospace;
     }
 
@@ -88,7 +89,7 @@
       font-size: clamp(3.5px, 0.48vw, 7px);
       line-height: 1.05;
       letter-spacing: 0.02em;
-      color: rgba(237, 242, 239, 0.45);
+      color: var(--text);
       white-space: pre;
       user-select: none;
     }
@@ -173,12 +174,13 @@
       transform: translateX(-50%);
       font-family: var(--font);
       font-size: 8px;
-      color: var(--muted);
+      color: var(--accent);
       letter-spacing: 0.04em;
       text-transform: uppercase;
       white-space: nowrap;
       opacity: 0;
       transition: opacity 0.25s ease;
+      background: #000000;
     }
 
     .pin:hover .pin__caption {
