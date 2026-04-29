@@ -80,6 +80,7 @@
       display: flex;
       justify-content: center;
       overflow: hidden;
+      position: relative;
     }
 
     .map {
@@ -92,11 +93,104 @@
       user-select: none;
     }
 
+    /* ── Pin overlay layer ── */
+    .pin-layer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    /* ── SVG line layer (below pins) ── */
+    .line-layer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .line-layer line {
+      stroke: var(--accent);
+      stroke-width: 1;
+      stroke-dasharray: 4 3;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .line-layer line.active {
+      opacity: 0.7;
+    }
+
+    /* ── Coordinate dot ── */
+    .coord-dot {
+      position: absolute;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--accent);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .coord-dot.active {
+      opacity: 1;
+    }
+
+    /* ── Pin box ── */
+    .pin {
+      position: absolute;
+      pointer-events: auto;
+      z-index: 3;
+      cursor: none;
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .pin:hover {
+      transform: scale(1.05);
+      z-index: 4;
+    }
+
+    .pin__img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 2px;
+    }
+
+    .pin__caption {
+      position: absolute;
+      bottom: -18px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: var(--font);
+      font-size: 8px;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      white-space: nowrap;
+      opacity: 0;
+      transition: opacity 0.25s ease;
+    }
+
+    .pin:hover .pin__caption {
+      opacity: 1;
+    }
+
     @media (max-width: 600px) {
       .back { top: 16px; left: 20px; }
       .label { top: 16px; right: 20px; }
       .map { font-size: 3px; letter-spacing: 0.02em; }
       .crosshair { display: none; }
+      .pin__caption { font-size: 6px; bottom: -14px; }
     }
   </style>
 </head>
@@ -109,11 +203,66 @@
   <a href="index.html" class="back">Back</a>
   <span class="label">Travel</span>
 
-  <div class="map-wrap">
+  <div class="map-wrap" id="map-wrap">
     <pre class="map" id="map"></pre>
+    <!-- SVG line layer -->
+    <svg class="line-layer" id="line-layer"></svg>
+    <!-- Pin overlay -->
+    <div class="pin-layer" id="pin-layer"></div>
   </div>
 
   <script>
+    // ═══════════════════════════════════════════════════════
+    // TRAVEL PINS CONFIG
+    // ═══════════════════════════════════════════════════════
+    //
+    // HOW TO ADD A NEW PIN:
+    // 1. Drop your image into the  travel-photos/  folder
+    // 2. Add a new entry to the PINS array below
+    //
+    // Each pin has:
+    //   image   → filename inside travel-photos/
+    //   caption → short text shown on hover
+    //   pin     → { x, y } percentage position of the IMAGE BOX on the page
+    //             (0,0) = top-left of map, (100,100) = bottom-right
+    //   coord   → { x, y } percentage position of the actual PLACE on the map
+    //             the hover line will draw from the image box to this point
+    //   size    → { w, h } pixel dimensions of the image box
+    //
+    // TIP: To find coordinates, open the page and hover over the map —
+    //      the crosshair position relative to the map helps you estimate.
+    //      Or use the built-in debug mode: add ?debug to the URL.
+    //
+    // ═══════════════════════════════════════════════════════
+
+    const PINS = [
+      {
+        image: "rome.png",
+        caption: "Rome, Italy",
+        pin: { x: 58, y: 10 },
+        coord: { x: 53, y: 20 },
+        size: { w: 60, h: 40 },
+      },
+      {
+        image: "tokyo.png",
+        caption: "Tokyo, Japan",
+        pin: { x: 92, y: 8 },
+        coord: { x: 87, y: 18 },
+        size: { w: 60, h: 40 },
+      },
+      {
+        image: "machu_picchu.png",
+        caption: "Machu Picchu, Peru",
+        pin: { x: 20, y: 40 },
+        coord: { x: 25, y: 54 },
+        size: { w: 60, h: 40 },
+      },
+    ];
+
+    // ═══════════════════════════════════════════════════════
+    // RENDERING (you don't need to touch anything below)
+    // ═══════════════════════════════════════════════════════
+
     // Crosshair cursor
     const crossV = document.getElementById("crosshair-v");
     const crossH = document.getElementById("crosshair-h");
@@ -124,12 +273,128 @@
     document.addEventListener("mouseenter", () => document.body.classList.remove("cursor-gone"));
     document.addEventListener("mouseleave", () => document.body.classList.add("cursor-gone"));
 
-    // Load map
+    // Debug mode — shows coordinate % on hover
+    const isDebug = window.location.search.includes("debug");
+
+    const mapWrap = document.getElementById("map-wrap");
+    const mapEl   = document.getElementById("map");
+    const lineLayer = document.getElementById("line-layer");
+    const pinLayer  = document.getElementById("pin-layer");
+
+    // Load map, then render pins
     fetch('worldmap.txt?v=' + Date.now())
       .then(r => r.text())
       .then(text => {
-        document.getElementById('map').textContent = text;
+        mapEl.textContent = text;
+
+        // Wait one frame for layout to settle
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            renderPins();
+            if (isDebug) enableDebug();
+          });
+        });
       });
+
+    function renderPins() {
+      const mapRect = mapEl.getBoundingClientRect();
+      const wrapRect = mapWrap.getBoundingClientRect();
+
+      // Map offset inside the wrap (since map is centered)
+      const mapOffsetX = mapRect.left - wrapRect.left;
+      const mapOffsetY = mapRect.top - wrapRect.top;
+      const mapW = mapRect.width;
+      const mapH = mapRect.height;
+
+      // Clear previous renders
+      pinLayer.innerHTML = "";
+      lineLayer.innerHTML = "";
+
+      PINS.forEach((pin, i) => {
+        // Calculate pixel positions relative to map-wrap
+        const pinPx = {
+          x: mapOffsetX + (pin.pin.x / 100) * mapW,
+          y: mapOffsetY + (pin.pin.y / 100) * mapH,
+        };
+        const coordPx = {
+          x: mapOffsetX + (pin.coord.x / 100) * mapW,
+          y: mapOffsetY + (pin.coord.y / 100) * mapH,
+        };
+
+        // ── Pin box ──
+        const el = document.createElement("div");
+        el.className = "pin";
+        el.style.left = (pinPx.x - pin.size.w / 2) + "px";
+        el.style.top  = (pinPx.y - pin.size.h / 2) + "px";
+        el.style.width  = pin.size.w + "px";
+        el.style.height = pin.size.h + "px";
+
+        const img = document.createElement("img");
+        img.className = "pin__img";
+        img.src = "travel-photos/" + pin.image;
+        img.alt = pin.caption;
+        img.draggable = false;
+        el.appendChild(img);
+
+        const caption = document.createElement("span");
+        caption.className = "pin__caption";
+        caption.textContent = pin.caption;
+        el.appendChild(caption);
+
+        pinLayer.appendChild(el);
+
+        // ── Coordinate dot ──
+        const dot = document.createElement("div");
+        dot.className = "coord-dot";
+        dot.style.left = coordPx.x + "px";
+        dot.style.top  = coordPx.y + "px";
+        pinLayer.appendChild(dot);
+
+        // ── SVG line ──
+        const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        line.setAttribute("x1", pinPx.x);
+        line.setAttribute("y1", pinPx.y);
+        line.setAttribute("x2", coordPx.x);
+        line.setAttribute("y2", coordPx.y);
+        lineLayer.appendChild(line);
+
+        // ── Hover interactions ──
+        el.addEventListener("mouseenter", () => {
+          line.classList.add("active");
+          dot.classList.add("active");
+        });
+        el.addEventListener("mouseleave", () => {
+          line.classList.remove("active");
+          dot.classList.remove("active");
+        });
+      });
+    }
+
+    // ── Debug overlay — shows % coordinates on mouse move ──
+    function enableDebug() {
+      const debugLabel = document.createElement("div");
+      debugLabel.style.cssText = `
+        position: fixed; bottom: 16px; left: 16px; z-index: 9999;
+        font-family: var(--font); font-size: 11px; color: var(--accent);
+        background: rgba(0,0,0,0.5); padding: 6px 10px; border-radius: 4px;
+        pointer-events: none;
+      `;
+      document.body.appendChild(debugLabel);
+
+      mapWrap.addEventListener("mousemove", (e) => {
+        const mapRect = mapEl.getBoundingClientRect();
+        const xPct = ((e.clientX - mapRect.left) / mapRect.width * 100).toFixed(1);
+        const yPct = ((e.clientY - mapRect.top) / mapRect.height * 100).toFixed(1);
+        debugLabel.textContent = `x: ${xPct}%  y: ${yPct}%`;
+      });
+    }
+
+    // ── Recalculate on resize ──
+    let resizeTimer;
+    window.addEventListener("resize", () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(renderPins, 150);
+    });
   </script>
 </body>
 

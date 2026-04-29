@@ -30,11 +30,11 @@
   --text-label: #9e9aaa;
   --border: rgba(237, 242, 239, 0.1);
   --border-hover: rgba(237, 242, 239, 0.22);
-  --accent: #32936F;
-  --accent-hover: #3dae82;
+  --accent: #3dae82;
+  --accent-hover:#32936F;
 
   /* All card accent bars use the green */
-  --c-accent: #32936F;
+  --c-accent: #3dae82;
 
   --radius: 2px;
   --font-display: "Paterna", "Georgia", serif;
