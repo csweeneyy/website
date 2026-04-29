@@ -142,7 +142,14 @@ document.addEventListener("DOMContentLoaded", () => {
         }, i * 100);
       });
 
-      // Cards stagger in
+      // Video section fade in (or cards if on ventures)
+      const videoSection = document.getElementById("video-section");
+      if (videoSection) {
+        setTimeout(() => {
+          videoSection.style.transition = "opacity 0.8s ease";
+          videoSection.style.opacity = "1";
+        }, 300);
+      }
       cards.forEach((card, i) => {
         setTimeout(() => {
           card.style.transition = "opacity 0.5s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease, background 0.35s ease, box-shadow 0.35s ease";

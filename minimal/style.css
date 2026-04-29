@@ -20,10 +20,10 @@
   font-display: block;
 }
 
-/* ---------- Tokens ---------- */
+/* ---------- Tokens ----------  --bg-page: #5F5B6B;  */
 :root {
   --bg-dark: #4a4659;
-  --bg-page: #5F5B6B;
+  --bg-page: ##544f64;
   --bg-card: rgba(237, 242, 239, 0.07);
   --text-primary: #EDF2EF;
   --text-body: #c5cac7;
@@ -31,7 +31,7 @@
   --border: rgba(237, 242, 239, 0.1);
   --border-hover: rgba(237, 242, 239, 0.22);
   --accent: #3dae82;
-  --accent-hover:#32936F;
+  --accent-hover: #32936F;
 
   /* All card accent bars use the green */
   --c-accent: #3dae82;
@@ -44,7 +44,9 @@
 }
 
 /* ---------- Reset ---------- */
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -67,7 +69,11 @@ body {
   cursor: none;
 }
 
-a { color: inherit; text-decoration: none; cursor: none; }
+a {
+  color: inherit;
+  text-decoration: none;
+  cursor: none;
+}
 
 /* ---------- Crosshair cursor (BRIGHTER) ---------- */
 .crosshair {
@@ -92,7 +98,9 @@ a { color: inherit; text-decoration: none; cursor: none; }
   top: -1px;
 }
 
-body.cursor-gone .crosshair { opacity: 0; }
+body.cursor-gone .crosshair {
+  opacity: 0;
+}
 
 /* ═══════════════════════════════════════════════════════
    LOADER — C/S animation
@@ -116,8 +124,13 @@ body.cursor-gone .crosshair { opacity: 0; }
   z-index: 2;
 }
 
-.loader__panel--top { top: 0; }
-.loader__panel--bot { bottom: 0; }
+.loader__panel--top {
+  top: 0;
+}
+
+.loader__panel--bot {
+  bottom: 0;
+}
 
 /* Animated C and S letters */
 .loader__letter {
@@ -172,10 +185,17 @@ body.cursor-gone .crosshair { opacity: 0; }
   transform: translateX(40px);
 }
 
-.nav-link:hover { color: var(--text-primary); }
+.nav-link:hover {
+  color: var(--text-primary);
+}
 
-.nav-link--accent { color: var(--accent); }
-.nav-link--accent:hover { color: var(--accent-hover); }
+.nav-link--accent {
+  color: var(--accent);
+}
+
+.nav-link--accent:hover {
+  color: var(--accent-hover);
+}
 
 /* ═══════════════════════════════════════════════════════
    MAIN LAYOUT — name left, cards right
@@ -261,6 +281,25 @@ body.cursor-gone .crosshair { opacity: 0; }
   grid-template-columns: repeat(2, 1fr);
   gap: 14px;
   padding-top: 20px;
+}
+
+/* ---------- Video (right column — replaces grid on index) ---------- */
+.video-section {
+  padding-top: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bg-video {
+  width: 100%;
+  height: auto;
+  max-height: calc(100vh - 160px);
+  object-fit: cover;
+  border: none;
+  outline: none;
+  border-radius: var(--radius);
+  display: block;
 }
 
 /* ---------- Card ---------- */
@@ -355,9 +394,13 @@ body.cursor-gone .crosshair { opacity: 0; }
 }
 
 /* Per-card accents — all use the green highlight */
-.card__accent { background: var(--c-accent); }
+.card__accent {
+  background: var(--c-accent);
+}
 
-.card:hover .card__label { color: var(--accent-hover); }
+.card:hover .card__label {
+  color: var(--accent-hover);
+}
 
 /* ═══════════════════════════════════════════════════════
    FOOTER (white bg theme)
@@ -409,7 +452,9 @@ body.cursor-gone .crosshair { opacity: 0; }
   transition: color 0.3s ease;
 }
 
-.footer__social:hover { color: var(--accent); }
+.footer__social:hover {
+  color: var(--accent);
+}
 
 .footer__social svg {
   flex-shrink: 0;
@@ -417,7 +462,9 @@ body.cursor-gone .crosshair { opacity: 0; }
   transition: opacity 0.3s ease;
 }
 
-.footer__social:hover svg { opacity: 0.9; }
+.footer__social:hover svg {
+  opacity: 0.9;
+}
 
 
 
@@ -431,10 +478,12 @@ body.cursor-gone .crosshair { opacity: 0; }
     padding: 90px 24px 40px;
     gap: 32px;
   }
+
   .hero {
     position: static;
     text-align: center;
   }
+
   .grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 12px;
@@ -442,25 +491,47 @@ body.cursor-gone .crosshair { opacity: 0; }
 }
 
 @media (max-width: 768px) {
-  body { cursor: auto; }
-  .crosshair { display: none; }
+  body {
+    cursor: auto;
+  }
 
-  .header { padding: 16px 20px; }
-  .nav { gap: 20px; }
-  .nav-link { font-size: 10px; }
+  .crosshair {
+    display: none;
+  }
+
+  .header {
+    padding: 16px 20px;
+  }
+
+  .nav {
+    gap: 20px;
+  }
+
+  .nav-link {
+    font-size: 10px;
+  }
 
   .card {
     min-height: 145px;
     padding: 16px;
   }
-  .card__title { font-size: 15px; }
-  .card__desc { font-size: 11px; }
+
+  .card__title {
+    font-size: 15px;
+  }
+
+  .card__desc {
+    font-size: 11px;
+  }
 
   .footer__inner {
     grid-template-columns: 1fr;
     gap: 28px;
   }
-  .footer { padding: 32px 20px 20px; }
+
+  .footer {
+    padding: 32px 20px 20px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -468,16 +539,48 @@ body.cursor-gone .crosshair { opacity: 0; }
     grid-template-columns: 1fr;
     gap: 10px;
   }
-  .card { min-height: 120px; }
+
+  .card {
+    min-height: 120px;
+  }
 }
 
 /* ═══════════════════════════════════════════════════════
    SKIP LOADER (returning visitors in same session)
    ═══════════════════════════════════════════════════════ */
 
-body.skip-loader .loader { display: none; }
-body.skip-loader .nav-link { opacity: 1; transform: none; }
-body.skip-loader .hero__char[data-reveal] { opacity: 1; transform: none; }
-body.skip-loader .hero__tagline { opacity: 1; }
-body.skip-loader .hero__bio { opacity: 1; }
-body.skip-loader .card { opacity: 1; transform: none; }
+body.skip-loader .loader {
+  display: none;
+}
+
+body.skip-loader .nav-link {
+  opacity: 1;
+  transform: none;
+}
+
+body.skip-loader .hero__char[data-reveal] {
+  opacity: 1;
+  transform: none;
+}
+
+body.skip-loader .hero__tagline {
+  opacity: 1;
+}
+
+body.skip-loader .hero__bio {
+  opacity: 1;
+}
+
+body.skip-loader .card {
+  opacity: 1;
+  transform: none;
+}
+
+body.skip-loader .video-section {
+  opacity: 1;
+}
+
+/* Video starts hidden for loader animation */
+.video-section {
+  opacity: 0;
+}
