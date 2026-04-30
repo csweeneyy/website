@@ -1,8 +1,7 @@
 /* ═══════════════════════════════════════════════════════
-   MINIMAL PORTFOLIO v3 — C/S Animation Orchestrator
-   Phase 1: C from bottom, S from right → vertical alignment
-   Phase 2: White panels slide in, letters invert
-   Phase 3: Name reveal letter-by-letter + font cycling + nav slide-in
+   MINIMAL PORTFOLIO v4 — Animation Orchestrator
+   Phase 1: White panels collapse to center
+   Phase 2: Name reveal letter-by-letter + font cycling + nav slide-in
    ═══════════════════════════════════════════════════════ */
 
 // ── Fonts to cycle through (must match @font-face names in style.css) ──
@@ -21,6 +20,9 @@ const FINAL_FONT = "Melodrame";
  * @param {number} interval — ms between font switches
  */
 function cycleFonts(el, duration, interval = 50) {
+  // Set a random font IMMEDIATELY — no delay/pause on the final font
+  el.style.fontFamily = `"${CYCLE_FONTS[Math.floor(Math.random() * CYCLE_FONTS.length)]}", serif`;
+
   const startTime = Date.now();
   const timer = setInterval(() => {
     const elapsed = Date.now() - startTime;
@@ -29,7 +31,6 @@ function cycleFonts(el, duration, interval = 50) {
       el.style.fontFamily = `"${FINAL_FONT}", serif`;
       return;
     }
-    // Pick a random font
     const randomFont = CYCLE_FONTS[Math.floor(Math.random() * CYCLE_FONTS.length)];
     el.style.fontFamily = `"${randomFont}", serif`;
   }, interval);
@@ -39,11 +40,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const loader     = document.getElementById("loader");
   const panelTop   = document.getElementById("panel-top");
   const panelBot   = document.getElementById("panel-bot");
-  const letterC    = document.getElementById("letter-c");
-  const letterS    = document.getElementById("letter-s");
   const crossV     = document.getElementById("crosshair-v");
   const crossH     = document.getElementById("crosshair-h");
-  const hero       = document.getElementById("hero");
   const navLinks   = document.querySelectorAll(".nav-link");
   const revealChars = document.querySelectorAll(".hero__char[data-reveal]");
   const cards       = document.querySelectorAll(".card");
@@ -70,83 +68,34 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   sessionStorage.setItem("cs-loaded", "1");
 
-  // ── Animation config ──
-  const vw = window.innerWidth;
-  const vh = window.innerHeight;
+  // Pre-set random fonts on all hero chars so Melodrame is never visible before cycling
+  // Start cycling IMMEDIATELY — runs during the loader so it's already going when revealed
+  const baseCycleDuration = 1800;  // long enough to cover loader + reveal
+  const staggerDelay = 60;
 
-  // Get final positions of C and S in the hero layout
-  const heroCharC = document.querySelector(".hero__char--c");
-  const heroCharS = document.querySelector(".hero__char--s");
+  allHeroChars.forEach((char, i) => {
+    const cycleDuration = baseCycleDuration + i * staggerDelay;
+    cycleFonts(char, cycleDuration, 50);
+  });
 
-  // Temporarily reveal chars for measurement
-  revealChars.forEach(c => { c.style.opacity = "1"; c.style.transform = "none"; });
-  const cRect = heroCharC.getBoundingClientRect();
-  const sRect = heroCharS.getBoundingClientRect();
-  revealChars.forEach(c => { c.style.opacity = "0"; c.style.transform = "translateY(20px)"; });
-
-  // Loader letter size matches hero
-  const fontSize = window.getComputedStyle(heroCharC).fontSize;
-  letterC.style.fontSize = fontSize;
-  letterS.style.fontSize = fontSize;
-
-  // ── PHASE 1: Letters enter → already vertically aligned ──
-  const targetCx = cRect.left;
-  const targetCy = cRect.top;
-  const targetSx = sRect.left;
-  const targetSy = sRect.top;
-
-  // Starting positions
-  letterC.style.left = targetCx + "px";
-  letterC.style.top  = (vh + 80) + "px";
-  letterS.style.left = (vw + 80) + "px";
-  letterS.style.top  = targetSy + "px";
-
-  // Smooth transitions
-  const moveT = "all 1s cubic-bezier(0.16, 1, 0.3, 1)";
-
-  // Animate to final vertical position
+  // ── PHASE 1: White panels collapse to center ──
   requestAnimationFrame(() => {
     requestAnimationFrame(() => {
-      letterC.style.transition = moveT;
-      letterS.style.transition = moveT;
-
-      letterC.style.top = targetCy + "px";
-      letterS.style.left = targetSx + "px";
+      panelTop.style.transition = "height 0.5s cubic-bezier(0.65, 0, 0.35, 1)";
+      panelBot.style.transition = "height 0.5s cubic-bezier(0.65, 0, 0.35, 1)";
+      panelTop.style.height = "50%";
+      panelBot.style.height = "50%";
     });
   });
 
-  // ── PHASE 2: Dark panels slide in (after letters settle) ──
-  setTimeout(() => {
-    panelTop.style.transition = "height 0.7s cubic-bezier(0.65, 0, 0.35, 1)";
-    panelBot.style.transition = "height 0.7s cubic-bezier(0.65, 0, 0.35, 1)";
-    panelTop.style.height = "50%";
-    panelBot.style.height = "50%";
-
-    // Flip letters to light as dark panels sweep over
-    setTimeout(() => {
-      letterC.style.color = "#EDF2EF";
-      letterS.style.color = "#EDF2EF";
-    }, 300);
-  }, 1200);
-
-  // ── PHASE 3: Loader out + reveal content + font cycling ──
+  // ── PHASE 2: Loader out + reveal content ──
   setTimeout(() => {
     // Hide loader
-    loader.style.transition = "opacity 0.4s ease";
+    loader.style.transition = "opacity 0.3s ease";
     loader.style.opacity = "0";
 
     setTimeout(() => {
       loader.classList.add("is-done");
-
-      // ── Font cycling on all hero characters ──
-      // Each letter gets a staggered cycle duration so they settle one by one
-      const baseCycleDuration = 800;
-      const staggerDelay = 60;
-
-      allHeroChars.forEach((char, i) => {
-        const cycleDuration = baseCycleDuration + i * staggerDelay;
-        cycleFonts(char, cycleDuration, 50);
-      });
 
       // Reveal remaining characters letter-by-letter
       revealChars.forEach((char, i) => {
@@ -197,6 +146,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }, 150 + i * 90);
       });
 
-    }, 450); // after loader fades
-  }, 2000);
+    }, 350); // after loader fades
+  }, 700); // faster — panels close in 0.5s so 700ms is enough
 });
