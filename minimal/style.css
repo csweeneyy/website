@@ -354,8 +354,8 @@ body.cursor-gone .crosshair {
   margin-top: 20px;
   font-family: var(--font-mono);
   font-size: 14px;
-  font-weight: 700;
-  color: var(--accent);
+  font-weight: 50;
+  color: var(--text-label);
   letter-spacing: 0.05em;
   text-transform: uppercase;
   opacity: 0;
