@@ -7,9 +7,7 @@
   <title>Connor Sweeney</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap"
-    rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
   <style>
     :root {
       --bg: #5F5B6B;
@@ -20,8 +18,19 @@
       --font: "Space Mono", "SF Mono", monospace;
     }
 
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { height: 100%; -webkit-font-smoothing: antialiased; cursor: none; }
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      height: 100%;
+      -webkit-font-smoothing: antialiased;
+      cursor: none;
+    }
 
     body {
       min-height: 100vh;
@@ -35,7 +44,13 @@
       cursor: none;
     }
 
-    a, button, input, select, textarea { cursor: none; }
+    a,
+    button,
+    input,
+    select,
+    textarea {
+      cursor: none;
+    }
 
     /* ── Crosshair cursor ── */
     .crosshair {
@@ -45,11 +60,29 @@
       background: rgba(237, 242, 239, 0.25);
       transition: opacity 0.15s ease;
     }
-    .crosshair--v { width: 1px; height: 100vh; top: 0; left: -1px; }
-    .crosshair--h { width: 100vw; height: 1px; left: 0; top: -1px; }
-    body.cursor-gone .crosshair { opacity: 0; }
 
-    a { color: inherit; text-decoration: none; }
+    .crosshair--v {
+      width: 1px;
+      height: 100vh;
+      top: 0;
+      left: -1px;
+    }
+
+    .crosshair--h {
+      width: 100vw;
+      height: 1px;
+      left: 0;
+      top: -1px;
+    }
+
+    body.cursor-gone .crosshair {
+      opacity: 0;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
 
     .back {
       position: fixed;
@@ -61,8 +94,14 @@
       color: var(--muted);
       transition: color 0.3s ease;
     }
-    .back:hover { color: var(--text); }
-    .back::before { content: "← "; }
+
+    .back:hover {
+      color: var(--text);
+    }
+
+    .back::before {
+      content: "← ";
+    }
 
     /* ── Form ── */
     .form {
@@ -86,7 +125,7 @@
 
     .label {
       font-size: 13px;
-      color: var(--muted);
+      color: var(--text);
       white-space: nowrap;
       flex-shrink: 0;
     }
@@ -104,8 +143,14 @@
       transition: border-color 0.3s ease;
     }
 
-    .field:focus { border-color: var(--accent); }
-    .field::placeholder { color: var(--muted); opacity: 0.5; }
+    .field:focus {
+      border-color: var(--accent);
+    }
+
+    .field::placeholder {
+      color: var(--muted);
+      opacity: 0.5;
+    }
 
     /* ── Warning ── */
     .warn {
@@ -117,7 +162,10 @@
       opacity: 0;
       transition: opacity 0.3s ease;
     }
-    .warn.visible { opacity: 1; }
+
+    .warn.visible {
+      opacity: 1;
+    }
 
     /* ── Submit ── */
     .submit-row {
@@ -139,13 +187,40 @@
       border-radius: 2px;
       transition: opacity 0.3s ease;
     }
-    .btn:hover { opacity: 0.85; }
+
+    .btn:hover {
+      opacity: 0.85;
+    }
+
+    .top-label {
+      position: fixed;
+      top: 28px;
+      right: 48px;
+      font-size: 11px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--accent);
+      z-index: 10;
+    }
 
     @media (max-width: 500px) {
-      .back { top: 16px; left: 20px; }
-      .row { flex-wrap: wrap; gap: 4px; }
-      .field { width: 100%; }
-      .crosshair { display: none; }
+      .back {
+        top: 16px;
+        left: 20px;
+      }
+
+      .row {
+        flex-wrap: wrap;
+        gap: 4px;
+      }
+
+      .field {
+        width: 100%;
+      }
+
+      .crosshair {
+        display: none;
+      }
     }
   </style>
 </head>
@@ -156,6 +231,7 @@
   <div class="crosshair crosshair--h" id="crosshair-h"></div>
 
   <a href="index.html" class="back">Back</a>
+  <span class="top-label">Work with Me</span>
 
   <form class="form" id="form" action="https://formsubmit.co/cpsweeney@mail.wlu.edu" method="POST">
     <input type="hidden" name="_subject" value="New inquiry from connorsweeney.com" />
@@ -176,12 +252,12 @@
 
     <div class="row">
       <span class="prompt">&gt;</span>
-      <span class="label">email at</span>
+      <span class="label">email</span>
       <input class="field" type="email" name="email" placeholder="..." required />
     </div>
 
     <div class="submit-row">
-      <button class="btn" type="submit">Send →</button>
+      <button class="btn" type="submit">Send</button>
     </div>
   </form>
 
@@ -191,7 +267,7 @@
     const crossH = document.getElementById("crosshair-h");
     document.addEventListener("mousemove", (e) => {
       crossV.style.left = e.clientX + "px";
-      crossH.style.top  = e.clientY + "px";
+      crossH.style.top = e.clientY + "px";
     });
     document.addEventListener("mouseenter", () => document.body.classList.remove("cursor-gone"));
     document.addEventListener("mouseleave", () => document.body.classList.add("cursor-gone"));
