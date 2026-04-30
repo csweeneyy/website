@@ -2,8 +2,38 @@
    MINIMAL PORTFOLIO v3 — C/S Animation Orchestrator
    Phase 1: C from bottom, S from right → vertical alignment
    Phase 2: White panels slide in, letters invert
-   Phase 3: Name reveal letter-by-letter + nav slide-in
+   Phase 3: Name reveal letter-by-letter + font cycling + nav slide-in
    ═══════════════════════════════════════════════════════ */
+
+// ── Fonts to cycle through (must match @font-face names in style.css) ──
+const CYCLE_FONTS = [
+  "Acne", "Aero", "Akira", "AppleGaramond", "AstralDelight",
+  "Cinzel", "CinzelDeco", "DSDigi", "DreamMMA", "LEDLight",
+  "MontHeavy", "Nasalization", "OverThere", "VerminVibes",
+  "Vogue", "Worldstar", "Cubic", "Paterna",
+];
+const FINAL_FONT = "Melodrame";
+
+/**
+ * Cycle a single element's font-family rapidly, then settle on the final font.
+ * @param {HTMLElement} el — the character span
+ * @param {number} duration — total cycling time in ms
+ * @param {number} interval — ms between font switches
+ */
+function cycleFonts(el, duration, interval = 50) {
+  const startTime = Date.now();
+  const timer = setInterval(() => {
+    const elapsed = Date.now() - startTime;
+    if (elapsed >= duration) {
+      clearInterval(timer);
+      el.style.fontFamily = `"${FINAL_FONT}", serif`;
+      return;
+    }
+    // Pick a random font
+    const randomFont = CYCLE_FONTS[Math.floor(Math.random() * CYCLE_FONTS.length)];
+    el.style.fontFamily = `"${randomFont}", serif`;
+  }, interval);
+}
 
 document.addEventListener("DOMContentLoaded", () => {
   const loader     = document.getElementById("loader");
@@ -19,6 +49,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const cards       = document.querySelectorAll(".card");
   const tagline     = document.querySelector(".hero__tagline");
   const heroBio     = document.querySelector(".hero__bio");
+
+  // All hero characters (including C and S) for font cycling
+  const allHeroChars = document.querySelectorAll(".hero__char");
 
   // ── Crosshair cursor ──
   if (crossV && crossH) {
@@ -57,18 +90,16 @@ document.addEventListener("DOMContentLoaded", () => {
   letterS.style.fontSize = fontSize;
 
   // ── PHASE 1: Letters enter → already vertically aligned ──
-  // C starts below viewport, S starts off-right
-  // Both target the same x-position (left-aligned, stacked)
   const targetCx = cRect.left;
   const targetCy = cRect.top;
   const targetSx = sRect.left;
   const targetSy = sRect.top;
 
-  // Starting positions (no diagonal — they go straight to vertical)
+  // Starting positions
   letterC.style.left = targetCx + "px";
-  letterC.style.top  = (vh + 80) + "px";    // below viewport
-  letterS.style.left = (vw + 80) + "px";    // off-right
-  letterS.style.top  = targetSy + "px";     // already at correct y
+  letterC.style.top  = (vh + 80) + "px";
+  letterS.style.left = (vw + 80) + "px";
+  letterS.style.top  = targetSy + "px";
 
   // Smooth transitions
   const moveT = "all 1s cubic-bezier(0.16, 1, 0.3, 1)";
@@ -79,9 +110,7 @@ document.addEventListener("DOMContentLoaded", () => {
       letterC.style.transition = moveT;
       letterS.style.transition = moveT;
 
-      // C slides up to its position
       letterC.style.top = targetCy + "px";
-      // S slides left to its position
       letterS.style.left = targetSx + "px";
     });
   });
@@ -100,7 +129,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 300);
   }, 1200);
 
-  // ── PHASE 3: Loader out + reveal content ──
+  // ── PHASE 3: Loader out + reveal content + font cycling ──
   setTimeout(() => {
     // Hide loader
     loader.style.transition = "opacity 0.4s ease";
@@ -109,7 +138,17 @@ document.addEventListener("DOMContentLoaded", () => {
     setTimeout(() => {
       loader.classList.add("is-done");
 
-      // Reveal remaining characters letter-by-letter (SLOWER: 90ms stagger)
+      // ── Font cycling on all hero characters ──
+      // Each letter gets a staggered cycle duration so they settle one by one
+      const baseCycleDuration = 800;
+      const staggerDelay = 60;
+
+      allHeroChars.forEach((char, i) => {
+        const cycleDuration = baseCycleDuration + i * staggerDelay;
+        cycleFonts(char, cycleDuration, 50);
+      });
+
+      // Reveal remaining characters letter-by-letter
       revealChars.forEach((char, i) => {
         setTimeout(() => {
           char.style.transition = "opacity 0.4s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)";

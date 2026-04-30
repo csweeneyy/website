@@ -20,14 +20,123 @@
   font-display: block;
 }
 
-/* ---------- Tokens ----------  --bg-page: #5F5B6B;  */
+/* ---------- Cycling fonts (loader animation) ---------- */
+@font-face {
+  font-family: "Acne";
+  src: url("fonts/AcneDemo-Regular.ttf") format("truetype");
+  font-display: block;
+}
+
+@font-face {
+  font-family: "Aero";
+  src: url("fonts/Aero.ttf") format("truetype");
+  font-display: block;
+}
+
+@font-face {
+  font-family: "Akira";
+  src: url("fonts/Akira Expanded Demo.otf") format("opentype");
+  font-display: block;
+}
+
+@font-face {
+  font-family: "AppleGaramond";
+  src: url("fonts/AppleGaramond-Bold.ttf") format("truetype");
+  font-display: block;
+}
+
+@font-face {
+  font-family: "AstralDelight";
+  src: url("fonts/Astral Delight Black Upright.ttf") format("truetype");
+  font-display: block;
+}
+
+@font-face {
+  font-family: "Cinzel";
+  src: url("fonts/Cinzel-Bold.otf") format("opentype");
+  font-display: block;
+}
+
+@font-face {
+  font-family: "CinzelDeco";
+  src: url("fonts/CinzelDecorative-Bold.otf") format("opentype");
+  font-display: block;
+}
+
+@font-face {
+  font-family: "DSDigi";
+  src: url("fonts/DS-DIGIB.TTF") format("truetype");
+  font-display: block;
+}
+
+@font-face {
+  font-family: "DreamMMA";
+  src: url("fonts/Dream MMA.ttf") format("truetype");
+  font-display: block;
+}
+
+@font-face {
+  font-family: "LEDLight";
+  src: url("fonts/LEDLIGHT.otf") format("opentype");
+  font-display: block;
+}
+
+@font-face {
+  font-family: "MontHeavy";
+  src: url("fonts/Mont-HeavyDEMO.otf") format("opentype");
+  font-display: block;
+}
+
+@font-face {
+  font-family: "Nasalization";
+  src: url("fonts/Nasalization Rg.otf") format("opentype");
+  font-display: block;
+}
+
+@font-face {
+  font-family: "OverThere";
+  src: url("fonts/Over There.ttf") format("truetype");
+  font-display: block;
+}
+
+@font-face {
+  font-family: "Melodrame";
+  src: url("fonts/Relationship of mélodrame.ttf") format("truetype");
+  font-display: block;
+}
+
+@font-face {
+  font-family: "VerminVibes";
+  src: url("fonts/Vermin Vibes.ttf") format("truetype");
+  font-display: block;
+}
+
+@font-face {
+  font-family: "Vogue";
+  src: url("fonts/Vogue.ttf") format("truetype");
+  font-display: block;
+}
+
+@font-face {
+  font-family: "Worldstar";
+  src: url("fonts/Worldstar.ttf") format("truetype");
+  font-display: block;
+}
+
+@font-face {
+  font-family: "Cubic";
+  src: url("fonts/cubic.ttf") format("truetype");
+  font-display: block;
+}
+
+/* ---------- Tokens ----------  --bg-page: #5F5B6B;  --text-body: #c5cac7; */
 :root {
   --bg-dark: #4a4659;
   --bg-page: #544f64;
   --bg-footer: #4a4659;
   --bg-card: rgba(237, 242, 239, 0.07);
   --text-primary: #EDF2EF;
-  --text-body: #c5cac7;
+  --text-body: #ffffff;
   --text-label: #9e9aaa;
   --border: rgba(237, 242, 239, 0.1);
   --border-hover: rgba(237, 242, 239, 0.22);
@@ -38,7 +147,7 @@
   --c-accent: #3dae82;
 
   --radius: 2px;
-  --font-display: "Paterna", "Georgia", serif;
+  --font-display: "Melodrame", "Paterna", "Georgia", serif;
   --font-heading: "Syne", system-ui, sans-serif;
   --font-mono: "Space Mono", "SF Mono", monospace;
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
@@ -257,7 +366,7 @@ body.cursor-gone .crosshair {
   font-family: var(--font-mono);
   font-size: 12px;
   color: var(--text-body);
-  line-height: 1.7;
+  line-height: 1.4;
   max-width: 380px;
   opacity: 0;
 }
