@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Beacon — Connor Sweeney</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #544f64;
+      --text: #EDF2EF;
+      --accent: #32936F;
+      --font: "Space Mono", "SF Mono", monospace;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      height: 100%;
+      -webkit-font-smoothing: antialiased;
+      cursor: none;
+    }
+
+    body {
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    /* ── Crosshair cursor ── */
+    .crosshair {
+      position: fixed;
+      pointer-events: none;
+      z-index: 9999;
+      background: rgba(237, 242, 239, 0.25);
+      transition: opacity 0.15s ease;
+    }
+
+    .crosshair--v {
+      width: 1px;
+      height: 100vh;
+      top: 0;
+      left: -1px;
+    }
+
+    .crosshair--h {
+      width: 100vw;
+      height: 1px;
+      left: 0;
+      top: -1px;
+    }
+
+    body.cursor-gone .crosshair {
+      opacity: 0;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+      cursor: none;
+    }
+
+    .back {
+      position: fixed;
+      top: 28px;
+      left: 48px;
+      font-size: 11px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--text);
+      transition: color 0.3s ease;
+    }
+
+    .back:hover {
+      color: var(--accent);
+    }
+
+    .back::before {
+      content: "← ";
+    }
+
+    .message {
+      font-size: 14px;
+      letter-spacing: 0.05em;
+      color: rgba(237, 242, 239, 0.7);
+      animation: pulse 2s infinite ease-in-out;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 1; }
+    }
+
+    @media (max-width: 500px) {
+      .back {
+        top: 16px;
+        left: 20px;
+      }
+
+      .crosshair {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- ═══ Crosshair cursor ═══ -->
+  <div class="crosshair crosshair--v" id="crosshair-v"></div>
+  <div class="crosshair crosshair--h" id="crosshair-h"></div>
+
+  <a href="index.html" class="back">Back</a>
+
+  <div class="message">
+    &gt; Coming soon...
+  </div>
+
+  <script>
+    const crossV = document.getElementById("crosshair-v");
+    const crossH = document.getElementById("crosshair-h");
+    document.addEventListener("mousemove", (e) => {
+      crossV.style.left = e.clientX + "px";
+      crossH.style.top = e.clientY + "px";
+    });
+    document.addEventListener("mouseenter", () => document.body.classList.remove("cursor-gone"));
+    document.addEventListener("mouseleave", () => document.body.classList.add("cursor-gone"));
+  </script>
+</body>
+
+</html>

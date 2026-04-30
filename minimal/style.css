@@ -353,10 +353,10 @@ body.cursor-gone .crosshair {
 .hero__tagline {
   margin-top: 20px;
   font-family: var(--font-mono);
-  font-size: 10px;
-  font-weight: 400;
-  color: var(--text-label);
-  letter-spacing: 0.1em;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: 0.05em;
   text-transform: uppercase;
   opacity: 0;
 }
@@ -593,7 +593,7 @@ body.cursor-gone .crosshair {
 
   .hero {
     position: static;
-    text-align: center;
+    text-align: left;
   }
 
   .grid {
