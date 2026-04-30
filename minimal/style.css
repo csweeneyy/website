@@ -345,9 +345,21 @@ body.cursor-gone .crosshair {
   /* Characters revealed by JS */
 }
 
-.hero__char[data-reveal] {
+.hero__char[data-reveal],
+.hero__name-img[data-reveal] {
   opacity: 0;
   transform: translateY(20px);
+}
+
+.hero__name-img {
+  width: 0.72em;  /* perfectly aligns with the top of capital letters */
+  height: 0.72em;
+  object-fit: cover;
+  vertical-align: baseline;
+  border-radius: 4px;
+  margin-left: 12px;
+  display: inline-block;
+  opacity: 0; /* for animation */
 }
 
 .hero__tagline {
@@ -372,7 +384,7 @@ body.cursor-gone .crosshair {
 }
 
 .hero__bio-line {
-  margin-bottom: 10px;
+  margin-bottom: 12px;
   padding-left: 18px;
   text-indent: -18px;
 }
@@ -385,6 +397,23 @@ body.cursor-gone .crosshair {
   color: var(--accent);
   margin-right: 2px;
   user-select: none;
+}
+
+.hero__beacon-link {
+  display: inline-block;
+  vertical-align: middle;
+  cursor: none;
+  transition: opacity 0.3s ease;
+}
+
+.hero__beacon-link:hover {
+  opacity: 0.7;
+}
+
+.hero__beacon-img {
+  height: 60px; /* <--- YOU CAN MANUALLY CHANGE THIS NUMBER HERE TO ADJUST BEACON SIZE */
+  width: auto;
+  display: block;
 }
 
 /* ---------- Grid (right column) ---------- */
@@ -670,7 +699,8 @@ body.skip-loader .nav-link {
   transform: none;
 }
 
-body.skip-loader .hero__char[data-reveal] {
+body.skip-loader .hero__char[data-reveal],
+body.skip-loader .hero__name-img[data-reveal] {
   opacity: 1;
   transform: none;
 }
