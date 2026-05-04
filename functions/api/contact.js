@@ -15,7 +15,7 @@ export async function onRequestPost(context) {
       },
       body: JSON.stringify({
         from: "Contact Form <onboarding@resend.dev>", // using Resend's default test domain, or they can use their own verified domain
-        to: ["cpsweeney@mail.wlu.edu"], // sending to the email they were using in formsubmit
+        to: ["csweeneyyt@gmail.com"], // sending to the email registered with Resend account
         subject: `New inquiry from ${name}`,
         html: `
           <p><strong>Name:</strong> ${name}</p>

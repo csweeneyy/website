@@ -318,6 +318,38 @@ body.cursor-gone .crosshair {
   gap: 48px;
   align-items: start;
   padding: 100px 48px 60px;
+  position: relative;
+}
+
+/* ---------- Scroll Indicator ---------- */
+.scroll-indicator {
+  position: fixed;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  animation: scroll-bounce 2s infinite ease-in-out;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  z-index: 100;
+  opacity: 0; /* hidden until loader finishes */
+}
+
+.scroll-indicator__arrow {
+  font-size: 14px;
+}
+
+@keyframes scroll-bounce {
+  0%, 100% { transform: translate(-50%, 0); }
+  50% { transform: translate(-50%, 6px); }
 }
 
 /* ---------- Hero (left column) ---------- */
