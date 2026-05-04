@@ -324,27 +324,29 @@ body.cursor-gone .crosshair {
 /* ---------- Scroll Indicator ---------- */
 .scroll-indicator {
   position: fixed;
-  bottom: 32px;
+  bottom: 24px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 4px;
-  color: var(--muted);
+  color: #7a7a7a;
   font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.1em;
+  font-size: 9px;
+  font-weight: 400;
+  letter-spacing: 0.15em;
   text-transform: uppercase;
-  animation: scroll-bounce 2s infinite ease-in-out;
   pointer-events: none;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.5s ease;
   z-index: 100;
   opacity: 0; /* hidden until loader finishes */
 }
 
 .scroll-indicator__arrow {
-  font-size: 14px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 @keyframes scroll-bounce {
