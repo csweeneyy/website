@@ -31,9 +31,8 @@
     <div class="loader__panel loader__panel--bot" id="panel-bot"></div>
   </div>
 
-  <!-- ═══ Crosshair cursor ═══ -->
-  <div class="crosshair crosshair--v" id="crosshair-v"></div>
-  <div class="crosshair crosshair--h" id="crosshair-h"></div>
+  
+  
 
   <!-- ═══ Header ═══ -->
   <header class="header" id="header">
@@ -46,7 +45,8 @@
   </header>
 
   <!-- ═══ Main Content ═══ -->
-  <main class="main" id="main-content">
+  <main id="swup" class="transition-fade">
+<div class="main">
     <!-- Name — left side -->
     <section class="hero" id="hero">
       <h1 class="hero__name">
@@ -86,7 +86,9 @@
         </video>
       </a>
     </section>
-  </main>
+  <script src="script.js"></script>
+</div>
+</main>
 
   <!-- ═══ Footer ═══ -->
   <footer class="footer" id="contact">
@@ -138,7 +140,14 @@
 
   </footer>
 
-  <script src="script.js"></script>
+  
+<script src="//instant.page/5.2.0" type="module" integrity="sha384-jnZcgoEq3zzkwe3XfuO2R8yA2w/1O/hH3y11hDbs0qjGvC7R4o0Dkiu17H6o0E3D"></script>
+
+<script src="https://unpkg.com/swup@4"></script>
+<script src="https://unpkg.com/@swup/scripts-plugin@2"></script>
+<script src="cursor.js"></script>
+<script src="router.js"></script>
+<script src="//instant.page/5.2.0" type="module" integrity="sha384-jnZcgoEq3zzkwe3XfuO2R8yA2w/1O/hH3y11hDbs0qjGvC7R4o0Dkiu17H6o0E3D"></script>
 </body>
 
 </html>

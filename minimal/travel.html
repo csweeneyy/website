@@ -213,9 +213,10 @@
 </head>
 
 <body>
+<main id="swup" class="transition-fade">
+
   <!-- Crosshair -->
-  <div class="crosshair crosshair--v" id="crosshair-v"></div>
-  <div class="crosshair crosshair--h" id="crosshair-h"></div>
+  
 
   <a href="index.html" class="back">Back</a>
   <span class="label">Travel Coming Soon</span>
@@ -229,8 +230,9 @@
   </div>
 
   <script>
-    // ═══════════════════════════════════════════════════════
-    // TRAVEL PINS CONFIG
+(function() {
+// ═══════════════════════════════════════════════════════
+// TRAVEL PINS CONFIG
     // ═══════════════════════════════════════════════════════
     //
     // HOW TO ADD A NEW PIN:
@@ -422,7 +424,17 @@
       clearTimeout(resizeTimer);
       resizeTimer = setTimeout(renderPins, 150);
     });
+})();
   </script>
+
+
+</main>
+
+<script src="https://unpkg.com/swup@4"></script>
+<script src="https://unpkg.com/@swup/scripts-plugin@2"></script>
+<script src="cursor.js"></script>
+<script src="router.js"></script>
+<script src="//instant.page/5.2.0" type="module" integrity="sha384-jnZcgoEq3zzkwe3XfuO2R8yA2w/1O/hH3y11hDbs0qjGvC7R4o0Dkiu17H6o0E3D"></script>
 </body>
 
 </html>

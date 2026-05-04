@@ -36,7 +36,7 @@ function cycleFonts(el, duration, interval = 50) {
   }, interval);
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+function initHome() {
   const loader     = document.getElementById("loader");
   const panelTop   = document.getElementById("panel-top");
   const panelBot   = document.getElementById("panel-bot");
@@ -51,15 +51,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // All hero characters (including C and S) for font cycling
   const allHeroChars = document.querySelectorAll(".hero__char");
 
-  // ── Crosshair cursor ──
-  if (crossV && crossH) {
-    document.addEventListener("mousemove", (e) => {
-      crossV.style.left = e.clientX + "px";
-      crossH.style.top  = e.clientY + "px";
-    });
-    document.addEventListener("mouseenter", () => document.body.classList.remove("cursor-gone"));
-    document.addEventListener("mouseleave", () => document.body.classList.add("cursor-gone"));
-  }
+
 
   // ── Session gate ──
   if (sessionStorage.getItem("cs-loaded")) {
@@ -148,4 +140,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     }, 350); // after loader fades
   }, 700); // faster — panels close in 0.5s so 700ms is enough
-});
+}
+
+// Run immediately if DOM is already parsed (Swup navigation), otherwise wait for DOMContentLoaded
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initHome);
+} else {
+  initHome();
+}
