@@ -1,11 +1,9 @@
-new thoughts (apr 30th)
-- make visibility good on mobile and ipad views
-- make beacon page
-- format words better on front page
-- build contact form functionality
+new thoughts (may 1st)
 - fill out travel log, fix glitchiness
 - make video not have distinct outlines (especially visible on the left)
-- make robots.txt and other SEO pages
+- make other SEO pages, QA check robots.txt
+- fill out beacon page
+
 
 
 

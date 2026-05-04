@@ -83,11 +83,16 @@
       justify-content: center;
       overflow: hidden;
       position: relative;
+      /* Force hardware acceleration to prevent repaint lag */
+      transform: translateZ(0);
+      will-change: transform;
     }
 
     .map {
       font-family: var(--font);
-      font-size: clamp(3.5px, 0.48vw, 7px);
+      /* INCREASE these decimals to make the map BIGGER. DECREASE to make it SMALLER. */
+      /* 0.65vw controls the max width, 0.9vh controls the max height */
+      font-size: clamp(3px, min(0.65vw, 0.9vh), 10px);
       line-height: 1.05;
       letter-spacing: 0.02em;
       color: var(--text);
@@ -153,6 +158,7 @@
       z-index: 3;
       cursor: none;
       transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: transform;
     }
 
     .pin:hover {
@@ -268,13 +274,22 @@
     // RENDERING (you don't need to touch anything below)
     // ═══════════════════════════════════════════════════════
 
-    // Crosshair cursor
+    // Crosshair cursor (optimized for performance)
     const crossV = document.getElementById("crosshair-v");
     const crossH = document.getElementById("crosshair-h");
+    
+    let isTicking = false;
     document.addEventListener("mousemove", (e) => {
-      crossV.style.left = e.clientX + "px";
-      crossH.style.top  = e.clientY + "px";
+      if (!isTicking) {
+        window.requestAnimationFrame(() => {
+          crossV.style.left = e.clientX + "px";
+          crossH.style.top  = e.clientY + "px";
+          isTicking = false;
+        });
+        isTicking = true;
+      }
     });
+    
     document.addEventListener("mouseenter", () => document.body.classList.remove("cursor-gone"));
     document.addEventListener("mouseleave", () => document.body.classList.add("cursor-gone"));
 
@@ -287,7 +302,7 @@
     const pinLayer  = document.getElementById("pin-layer");
 
     // Load map, then render pins
-    fetch('worldmap.txt?v=' + Date.now())
+    fetch('map_test2.txt?v=' + Date.now())
       .then(r => r.text())
       .then(text => {
         mapEl.textContent = text;
@@ -386,11 +401,18 @@
       `;
       document.body.appendChild(debugLabel);
 
+      let debugTicking = false;
       mapWrap.addEventListener("mousemove", (e) => {
-        const mapRect = mapEl.getBoundingClientRect();
-        const xPct = ((e.clientX - mapRect.left) / mapRect.width * 100).toFixed(1);
-        const yPct = ((e.clientY - mapRect.top) / mapRect.height * 100).toFixed(1);
-        debugLabel.textContent = `x: ${xPct}%  y: ${yPct}%`;
+        if (!debugTicking) {
+          window.requestAnimationFrame(() => {
+            const mapRect = mapEl.getBoundingClientRect();
+            const xPct = ((e.clientX - mapRect.left) / mapRect.width * 100).toFixed(1);
+            const yPct = ((e.clientY - mapRect.top) / mapRect.height * 100).toFixed(1);
+            debugLabel.textContent = `x: ${xPct}%  y: ${yPct}%`;
+            debugTicking = false;
+          });
+          debugTicking = true;
+        }
       });
     }
 

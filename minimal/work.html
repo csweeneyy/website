@@ -242,10 +242,7 @@
   <a href="index.html" class="back">Back</a>
   <span class="top-label">Work with Me</span>
 
-  <form class="form" id="form" action="https://formsubmit.co/cpsweeney@mail.wlu.edu" method="POST">
-    <input type="hidden" name="_subject" value="New inquiry from connorsweeney.com" />
-    <input type="hidden" name="_captcha" value="false" />
-
+  <form class="form" id="form">
     <div class="row">
       <span class="prompt">&gt;</span>
       <span class="label">contacting about</span>
@@ -256,17 +253,18 @@
     <div class="row">
       <span class="prompt">&gt;</span>
       <span class="label">name</span>
-      <input class="field" type="text" name="name" placeholder="..." required />
+      <input class="field" type="text" name="name" id="name-field" placeholder="..." required />
     </div>
 
     <div class="row">
       <span class="prompt">&gt;</span>
       <span class="label">email</span>
-      <input class="field" type="email" name="email" placeholder="..." required />
+      <input class="field" type="email" name="email" id="email-field" placeholder="..." required />
     </div>
 
-    <div class="submit-row">
-      <button class="btn" type="submit">Send</button>
+    <div class="submit-row" style="align-items: center; justify-content: space-between;">
+      <span id="form-status" style="font-size: 11px; color: var(--accent); opacity: 0; transition: opacity 0.3s ease;">Sent successfully!</span>
+      <button class="btn" type="submit" id="submit-btn">Send</button>
     </div>
   </form>
 
@@ -287,11 +285,59 @@
     aboutField.addEventListener("input", () => {
       aboutWarn.classList.toggle("visible", aboutField.value.length > 50);
     });
-    document.getElementById("form").addEventListener("submit", (e) => {
+
+    // Form submission via fetch to Cloudflare Pages Function
+    const form = document.getElementById("form");
+    const submitBtn = document.getElementById("submit-btn");
+    const formStatus = document.getElementById("form-status");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      
       if (aboutField.value.length > 50) {
-        e.preventDefault();
         aboutField.focus();
+        return;
       }
+
+      submitBtn.innerText = "Sending...";
+      submitBtn.style.opacity = "0.5";
+      submitBtn.disabled = true;
+
+      const data = {
+        about: document.getElementById("about-field").value,
+        name: document.getElementById("name-field").value,
+        email: document.getElementById("email-field").value
+      };
+
+      try {
+        const response = await fetch("/api/contact", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data)
+        });
+
+        if (response.ok) {
+          formStatus.innerText = "Sent successfully!";
+          formStatus.style.opacity = "1";
+          form.reset();
+        } else {
+          formStatus.innerText = "Error sending message.";
+          formStatus.style.color = "#ff4a4a";
+          formStatus.style.opacity = "1";
+        }
+      } catch (err) {
+        formStatus.innerText = "Error sending message.";
+        formStatus.style.color = "#ff4a4a";
+        formStatus.style.opacity = "1";
+      }
+
+      submitBtn.innerText = "Send";
+      submitBtn.style.opacity = "1";
+      submitBtn.disabled = false;
+      
+      setTimeout(() => {
+        formStatus.style.opacity = "0";
+      }, 4000);
     });
   </script>
 </body>
