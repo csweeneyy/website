@@ -147,6 +147,44 @@ function initHome() {
 
     }, 350); // after loader fades
   }, 700); // faster — panels close in 0.5s so 700ms is enough
+  
+  // Sync background color with video edge
+  syncVideoBackgroundColor();
+}
+
+function syncVideoBackgroundColor() {
+  const video = document.querySelector('.bg-video');
+  if (!video) return;
+
+  const canvas = document.createElement('canvas');
+  const ctx = canvas.getContext('2d', { willReadFrequently: true });
+  canvas.width = 1;
+  canvas.height = 1;
+
+  let lastColor = "";
+
+  const updateColor = () => {
+    try {
+      // Draw the top-left pixel
+      ctx.drawImage(video, 0, 0, 1, 1);
+      const data = ctx.getImageData(0, 0, 1, 1).data;
+      if (data[3] === 0) return; // not ready
+
+      const color = `rgb(${data[0]}, ${data[1]}, ${data[2]})`;
+      if (color !== lastColor) {
+        document.documentElement.style.setProperty('--bg-page', color);
+        document.body.style.backgroundColor = color;
+        lastColor = color;
+      }
+    } catch (e) {
+      // Ignore cross-origin or other errors
+    }
+  };
+
+  video.addEventListener('timeupdate', updateColor);
+  if (video.readyState >= 3) {
+    updateColor();
+  }
 }
 
 // Run immediately if DOM is already parsed (Swup navigation), otherwise wait for DOMContentLoaded
