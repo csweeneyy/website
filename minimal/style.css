@@ -718,6 +718,10 @@ body.cursor-gone .crosshair {
   .footer {
     padding: 32px 20px 20px;
   }
+
+  .video-section::after {
+    box-shadow: inset 0 0 60px 40px var(--bg-page);
+  }
 }
 
 @media (max-width: 480px) {

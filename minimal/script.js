@@ -61,14 +61,14 @@ function initHome() {
     const tryPlay = () => {
       vid.play().then(() => {
         // Success — remove fallback listeners
-        ['click', 'touchstart', 'scroll'].forEach(evt =>
+        ['click', 'touchstart', 'scroll', 'mousemove'].forEach(evt =>
           document.removeEventListener(evt, tryPlay, { capture: true })
         );
       }).catch(() => {});
     };
     tryPlay();
     // If autoplay was blocked, retry on first user interaction
-    ['click', 'touchstart', 'scroll'].forEach(evt =>
+    ['click', 'touchstart', 'scroll', 'mousemove'].forEach(evt =>
       document.addEventListener(evt, tryPlay, { once: true, capture: true })
     );
   }
