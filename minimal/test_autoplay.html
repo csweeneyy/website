@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Autoplay Test</title>
+<style>body{background:#544f64;color:white;font-family:monospace;padding:40px;}video{width:300px;display:block;margin:10px 0;border:1px solid white;}</style></head>
+<body>
+<h2>Safari Autoplay Test</h2>
+
+<p>Test A: Tiny generated video (baseline H.264, no audio, 3s)</p>
+<video id="vA" autoplay muted loop playsinline preload="auto">
+  <source src="tiny_test.mp4" type="video/mp4">
+</video>
+
+<p>Test B: Your bg.mp4 (high H.264, no audio)</p>
+<video id="vB" autoplay muted loop playsinline preload="auto">
+  <source src="bg.mp4" type="video/mp4">
+</video>
+
+<p id="status">Checking in 3 seconds...</p>
+<script>
+setTimeout(() => {
+  const vA = document.getElementById('vA');
+  const vB = document.getElementById('vB');
+  let msg = 'A paused: ' + vA.paused + ' | B paused: ' + vB.paused;
+  
+  // Try play on both
+  Promise.allSettled([
+    vA.paused ? vA.play() : Promise.resolve('already playing'),
+    vB.paused ? vB.play() : Promise.resolve('already playing')
+  ]).then(results => {
+    msg += ' | A play(): ' + (results[0].status === 'fulfilled' ? 'OK' : results[0].reason.message);
+    msg += ' | B play(): ' + (results[1].status === 'fulfilled' ? 'OK' : results[1].reason.message);
+    document.getElementById('status').textContent = msg;
+  });
+}, 3000);
+</script>
+</body></html>
