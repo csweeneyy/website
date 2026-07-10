@@ -125,12 +125,12 @@
       stroke: var(--accent);
       stroke-width: 1;
       stroke-dasharray: 4 3;
-      opacity: 0;
+      opacity: 0.5;
       transition: opacity 0.3s ease;
     }
 
     .line-layer line.active {
-      opacity: 0.7;
+      opacity: 1;
     }
 
     /* ── Coordinate dot ── */
@@ -140,7 +140,7 @@
       height: 5px;
       border-radius: 50%;
       background: var(--accent);
-      opacity: 0;
+      opacity: 0.8;
       transition: opacity 0.3s ease;
       transform: translate(-50%, -50%);
       pointer-events: none;
@@ -254,23 +254,7 @@
     //
     // ═══════════════════════════════════════════════════════
 
-    const PINS = [
-      
-      {
-        image: "kyoto.png",
-        caption: "Kyoto, Japan",
-        pin: { x: 95, y: 30 },
-        coord: { x: 87.5, y: 35 },
-        size: { w: 60, h: 40 },
-      },
-      {
-        image: "motovun.jpeg",
-        caption: "Motovun, Croatia",
-        pin: { x: 64, y: 25 },
-        coord: { x: 56.25, y: 33 },
-        size: { w: 60, h: 40 },
-      },
-    ];
+    let PINS = [];
 
     // ═══════════════════════════════════════════════════════
     // RENDERING (you don't need to touch anything below)
@@ -296,25 +280,88 @@
     document.addEventListener("mouseleave", () => document.body.classList.add("cursor-gone"));
 
     // Debug mode — shows coordinate % on hover
-    const isDebug = window.location.search.includes("debug");
+    const isDebug = true; // TEMP: forced on for calibration (was: window.location.search.includes("debug"))
 
     const mapWrap = document.getElementById("map-wrap");
     const mapEl   = document.getElementById("map");
     const lineLayer = document.getElementById("line-layer");
     const pinLayer  = document.getElementById("pin-layer");
 
-    // Load map, then render pins
-    fetch('map_test2.txt?v=' + Date.now())
+    // Hide pins/lines until map animation finishes
+    pinLayer.style.opacity = '0';
+    lineLayer.style.opacity = '0';
+
+    // Load pins from JSON, then load and animate the map
+    fetch('pins.json?v=' + Date.now())
+      .then(r => r.json())
+      .then(pins => {
+        PINS = pins;
+        return fetch('map_test2.txt?v=' + Date.now());
+      })
       .then(r => r.text())
       .then(text => {
-        mapEl.textContent = text;
+        // Typewriter animation
+        const duration = 1500; // ms
+        const start = performance.now();
+        const totalChars = text.length;
 
-        // Wait one frame for layout to settle
+        // Ensure container holds its shape by setting the full text,
+        // measuring, then setting explicit height/width
+        mapEl.style.visibility = 'hidden';
+        mapEl.textContent = text;
+        
+        // Wait for next frame so dimensions are calculated
         requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            renderPins();
-            if (isDebug) enableDebug();
-          });
+          const mapW = mapEl.clientWidth;
+          const mapH = mapEl.clientHeight;
+          
+          mapEl.style.width = mapW + 'px';
+          mapEl.style.height = mapH + 'px';
+          mapEl.style.display = 'inline-block'; // needed for explicit width/height
+          mapEl.style.visibility = 'visible';
+          
+          function animateMap(now) {
+            const elapsed = now - start;
+            const progress = Math.min(elapsed / duration, 1);
+            
+            // Linear progression for typewriter effect looks best
+            const count = Math.floor(progress * totalChars);
+            
+            // Show the first 'count' characters, hide the rest by making them transparent
+            // We use HTML to color the remaining characters transparent so the layout is preserved perfectly
+            const visibleText = text.substring(0, count);
+            const hiddenText = text.substring(count);
+            
+            // Escape HTML for safety, though the map is just ASCII art
+            const safeVisible = visibleText.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            const safeHidden = hiddenText.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            
+            mapEl.innerHTML = safeVisible + '<span style="opacity: 0;">' + safeHidden + '</span>';
+
+            if (progress < 1) {
+              requestAnimationFrame(animateMap);
+            } else {
+              mapEl.textContent = text; // Clean up HTML
+              
+              // Remove explicit sizing so it can resize on window resize
+              mapEl.style.width = '';
+              mapEl.style.height = '';
+              mapEl.style.display = '';
+
+              // Fade in pins after map is done
+              requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                  renderPins();
+                  pinLayer.style.transition = 'opacity 0.4s ease';
+                  lineLayer.style.transition = 'opacity 0.4s ease';
+                  pinLayer.style.opacity = '1';
+                  lineLayer.style.opacity = '1';
+                  if (isDebug) enableDebug();
+                });
+              });
+            }
+          }
+          requestAnimationFrame(animateMap);
         });
       });
 
@@ -392,17 +439,76 @@
       });
     }
 
-    // ── Debug overlay — shows % coordinates on mouse move ──
+    // ── Debug overlay — shows % coordinates + draggable pins ──
     function enableDebug() {
+      // Coordinate label (bottom-left)
       const debugLabel = document.createElement("div");
       debugLabel.style.cssText = `
         position: fixed; bottom: 16px; left: 16px; z-index: 9999;
         font-family: var(--font); font-size: 11px; color: var(--accent);
-        background: rgba(0,0,0,0.5); padding: 6px 10px; border-radius: 4px;
-        pointer-events: none;
+        background: rgba(0,0,0,0.7); padding: 8px 12px; border-radius: 4px;
+        pointer-events: none; white-space: pre;
       `;
       document.body.appendChild(debugLabel);
 
+      // Output panel (top-left) — live pin values
+      const outputPanel = document.createElement("div");
+      outputPanel.style.cssText = `
+        position: fixed; top: 60px; left: 16px; z-index: 9999;
+        font-family: var(--font); font-size: 9px; color: var(--accent);
+        background: rgba(0,0,0,0.85); padding: 12px 14px; border-radius: 4px;
+        pointer-events: none; white-space: pre; line-height: 1.6;
+      `;
+      document.body.appendChild(outputPanel);
+
+      function updateOutput() {
+        let text = "PIN VALUES (drag to update)\n";
+        text += "─".repeat(34) + "\n";
+        PINS.forEach((p, i) => {
+          text += `${p.caption}\n`;
+          text += `  pin:   { x: ${p.pin.x}, y: ${p.pin.y} }\n`;
+          text += `  coord: { x: ${p.coord.x}, y: ${p.coord.y} }\n`;
+        });
+        outputPanel.textContent = text;
+      }
+      updateOutput();
+
+      // Save button
+      let hasUnsaved = false;
+      const saveBtn = document.createElement("button");
+      saveBtn.textContent = "Save pins";
+      saveBtn.style.cssText = `
+        position: fixed; bottom: 16px; right: 16px; z-index: 9999;
+        font-family: var(--font); font-size: 11px; color: var(--bg);
+        background: var(--accent); border: none; padding: 8px 16px;
+        border-radius: 4px; cursor: pointer; opacity: 0.4;
+        transition: opacity 0.2s ease;
+      `;
+      document.body.appendChild(saveBtn);
+
+      function markDirty() {
+        hasUnsaved = true;
+        saveBtn.style.opacity = '1';
+        saveBtn.textContent = '● Save pins';
+      }
+
+      saveBtn.addEventListener('click', () => {
+        fetch('/save-pins', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(PINS, null, 2)
+        }).then(() => {
+          hasUnsaved = false;
+          saveBtn.style.opacity = '0.4';
+          saveBtn.textContent = 'Saved ✓';
+          setTimeout(() => { saveBtn.textContent = 'Save pins'; }, 1500);
+        }).catch(() => {
+          saveBtn.textContent = 'Error ✗';
+          setTimeout(() => { saveBtn.textContent = '● Save pins'; }, 1500);
+        });
+      });
+
+      // Coordinate display on hover
       let debugTicking = false;
       mapWrap.addEventListener("mousemove", (e) => {
         if (!debugTicking) {
@@ -416,6 +522,79 @@
           debugTicking = true;
         }
       });
+
+      // ── Draggable pins and coord dots ──
+      const allPins = pinLayer.querySelectorAll(".pin");
+      const allDots = pinLayer.querySelectorAll(".coord-dot");
+      const allLines = lineLayer.querySelectorAll("line");
+
+      function makeDraggable(el, i, type) {
+        el.style.pointerEvents = "auto";
+        el.style.cursor = "grab";
+        if (type === "dot") {
+        }
+        let dragging = false, startX, startY, origLeft, origTop;
+
+        el.addEventListener("mousedown", (e) => {
+          dragging = true;
+          el.style.cursor = "grabbing";
+          startX = e.clientX;
+          startY = e.clientY;
+          origLeft = parseFloat(el.style.left);
+          origTop = parseFloat(el.style.top);
+          e.preventDefault();
+          e.stopPropagation();
+        });
+
+        document.addEventListener("mousemove", (e) => {
+          if (!dragging) return;
+          const dx = e.clientX - startX;
+          const dy = e.clientY - startY;
+          const newLeft = origLeft + dx;
+          const newTop = origTop + dy;
+          el.style.left = newLeft + "px";
+          el.style.top = newTop + "px";
+
+          const mapRect = mapEl.getBoundingClientRect();
+          const wrapRect = mapWrap.getBoundingClientRect();
+          const offsetX = mapRect.left - wrapRect.left;
+          const offsetY = mapRect.top - wrapRect.top;
+          const mapW = mapRect.width;
+          const mapH = mapRect.height;
+
+          if (type === "pin") {
+            const cx = newLeft + PINS[i].size.w / 2;
+            const cy = newTop + PINS[i].size.h / 2;
+            allLines[i].setAttribute("x1", cx);
+            allLines[i].setAttribute("y1", cy);
+            const xPct = parseFloat(((cx - offsetX) / mapW * 100).toFixed(1));
+            const yPct = parseFloat(((cy - offsetY) / mapH * 100).toFixed(1));
+            PINS[i].pin.x = xPct;
+            PINS[i].pin.y = yPct;
+            debugLabel.textContent = `pin[${i}] → { x: ${xPct}, y: ${yPct} }`;
+          } else {
+            allLines[i].setAttribute("x2", newLeft);
+            allLines[i].setAttribute("y2", newTop);
+            const xPct = parseFloat(((newLeft - offsetX) / mapW * 100).toFixed(1));
+            const yPct = parseFloat(((newTop - offsetY) / mapH * 100).toFixed(1));
+            PINS[i].coord.x = xPct;
+            PINS[i].coord.y = yPct;
+            debugLabel.textContent = `coord[${i}] → { x: ${xPct}, y: ${yPct} }`;
+          }
+          updateOutput();
+        });
+
+        document.addEventListener("mouseup", () => {
+          if (dragging) {
+            dragging = false;
+            el.style.cursor = "grab";
+            markDirty();
+          }
+        });
+      }
+
+      allPins.forEach((pinEl, i) => makeDraggable(pinEl, i, "pin"));
+      allDots.forEach((dotEl, i) => makeDraggable(dotEl, i, "dot"));
     }
 
     // ── Recalculate on resize ──

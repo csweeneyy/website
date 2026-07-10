@@ -1,0 +1,226 @@
+[
+  {
+    "image": "kyoto.png",
+    "caption": "Kyoto, Japan",
+    "pin": {
+      "x": 94.1,
+      "y": 34.6
+    },
+    "coord": {
+      "x": 87,
+      "y": 40.8
+    },
+    "size": {
+      "w": 60,
+      "h": 40
+    }
+  },
+  {
+    "image": "motovun.jpeg",
+    "caption": "Motovun, Croatia",
+    "pin": {
+      "x": 58.7,
+      "y": 36.6
+    },
+    "coord": {
+      "x": 51.3,
+      "y": 34.8
+    },
+    "size": {
+      "w": 60,
+      "h": 40
+    }
+  },
+  {
+    "image": "zion.jpg",
+    "caption": "Zion, Utah",
+    "pin": {
+      "x": 4.5,
+      "y": 33.7
+    },
+    "coord": {
+      "x": 13.4,
+      "y": 38
+    },
+    "size": {
+      "w": 60,
+      "h": 40
+    }
+  },
+  {
+    "image": "auckland.JPG",
+    "caption": "Auckland, New Zealand",
+    "pin": {
+      "x": 96.7,
+      "y": 67.2
+    },
+    "coord": {
+      "x": 99.1,
+      "y": 88
+    },
+    "size": {
+      "w": 60,
+      "h": 40
+    }
+  },
+  {
+    "image": "bratislava.jpeg",
+    "caption": "Bratislava, Slovakia",
+    "pin": {
+      "x": 52.5,
+      "y": 18
+    },
+    "coord": {
+      "x": 50.5,
+      "y": 32.2
+    },
+    "size": {
+      "w": 60,
+      "h": 40
+    }
+  },
+  {
+    "image": "brugges.jpeg",
+    "caption": "Brugge, Belgium",
+    "pin": {
+      "x": 46.2,
+      "y": 13.2
+    },
+    "coord": {
+      "x": 47.6,
+      "y": 30.5
+    },
+    "size": {
+      "w": 60,
+      "h": 40
+    }
+  },
+  {
+    "image": "camino.JPG",
+    "caption": "Camino, Portugal",
+    "pin": {
+      "x": 31.1,
+      "y": 47.4
+    },
+    "coord": {
+      "x": 44.3,
+      "y": 38.7
+    },
+    "size": {
+      "w": 60,
+      "h": 40
+    }
+  },
+  {
+    "image": "graz.jpeg",
+    "caption": "Graz, Austria",
+    "pin": {
+      "x": 63.5,
+      "y": 23.6
+    },
+    "coord": {
+      "x": 49.7,
+      "y": 33.7
+    },
+    "size": {
+      "w": 60,
+      "h": 40
+    }
+  },
+  {
+    "image": "hmong.jpeg",
+    "caption": "Sa Phin, Vietnam",
+    "pin": {
+      "x": 92.1,
+      "y": 49.2
+    },
+    "coord": {
+      "x": 80.2,
+      "y": 41
+    },
+    "size": {
+      "w": 60,
+      "h": 40
+    }
+  },
+  {
+    "image": "maribor.jpeg",
+    "caption": "Drauradweg, Slovenia",
+    "pin": {
+      "x": 47.3,
+      "y": 44.9
+    },
+    "coord": {
+      "x": 50.3,
+      "y": 34.4
+    },
+    "size": {
+      "w": 60,
+      "h": 40
+    }
+  },
+  {
+    "image": "peakdistrict.jpeg",
+    "caption": "Peak District, England",
+    "pin": {
+      "x": 36.5,
+      "y": 22.6
+    },
+    "coord": {
+      "x": 45.8,
+      "y": 29.1
+    },
+    "size": {
+      "w": 60,
+      "h": 40
+    }
+  },
+  {
+    "image": "pontevedra.jpg",
+    "caption": "Pontevedra, Spain",
+    "pin": {
+      "x": 36.8,
+      "y": 57.7
+    },
+    "coord": {
+      "x": 44.4,
+      "y": 37.9
+    },
+    "size": {
+      "w": 60,
+      "h": 40
+    }
+  },
+  {
+    "image": "santiago.jpeg",
+    "caption": "Santiago de Compostela, Spain",
+    "pin": {
+      "x": 28.2,
+      "y": 30.4
+    },
+    "coord": {
+      "x": 44.4,
+      "y": 37.3
+    },
+    "size": {
+      "w": 60,
+      "h": 40
+    }
+  },
+  {
+    "image": "teanau.jpeg",
+    "caption": "Te Anau, New Zealand",
+    "pin": {
+      "x": 88,
+      "y": 95.8
+    },
+    "coord": {
+      "x": 97.1,
+      "y": 92
+    },
+    "size": {
+      "w": 60,
+      "h": 40
+    }
+  }
+]
