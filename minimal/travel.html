@@ -279,8 +279,8 @@
     document.addEventListener("mouseenter", () => document.body.classList.remove("cursor-gone"));
     document.addEventListener("mouseleave", () => document.body.classList.add("cursor-gone"));
 
-    // Debug mode — shows coordinate % on hover
-    const isDebug = true; // TEMP: forced on for calibration (was: window.location.search.includes("debug"))
+    // Debug mode — shows coordinate % on hover and allows dragging pins
+    const isDebug = false; // set to true or use ?debug in URL to edit pins
 
     const mapWrap = document.getElementById("map-wrap");
     const mapEl   = document.getElementById("map");
