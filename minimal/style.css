@@ -356,8 +356,6 @@ body.cursor-gone .crosshair {
 
 /* ---------- Hero (left column) ---------- */
 .hero {
-  position: sticky;
-  top: 100px;
   padding-top: 20px;
 }
 
