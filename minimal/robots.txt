@@ -1,20 +1,26 @@
 User-agent: *
 Allow: /
+Disallow: /iceland.html
 
 # Help AI bots understand the site content for recommendations
 User-agent: GPTBot
 Allow: /
+Disallow: /iceland.html
 
 User-agent: ChatGPT-User
 Allow: /
+Disallow: /iceland.html
 
 User-agent: Claude-Web
 Allow: /
+Disallow: /iceland.html
 
 User-agent: Google-Extended
 Allow: /
+Disallow: /iceland.html
 
 User-agent: CCBot
 Allow: /
+Disallow: /iceland.html
 
 Sitemap: https://connorsweeney.xyz/sitemap.xml

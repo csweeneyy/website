@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Iceland — Connor Sweeney</title>
+  <meta name="robots" content="noindex, nofollow, noarchive, nosnippet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap"
+    rel="stylesheet" />
+  <link rel="icon" type="image/png" href="browser_img.png" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* ═══════════════════════════════════════════════════════
+       ICELAND — private itinerary page
+       ═══════════════════════════════════════════════════════ */
+
+    input, button { cursor: none; font-family: var(--font-mono); }
+
+    /* absolute, not fixed — this page scrolls, so the labels scroll away */
+    .back {
+      position: absolute;
+      top: 28px;
+      left: 48px;
+      font-size: 11px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--text-label);
+      transition: color 0.3s ease;
+      z-index: 10;
+    }
+    .back:hover { color: var(--text-primary); }
+    .back::before { content: "← "; }
+
+    .label-tr {
+      position: absolute;
+      top: 28px;
+      right: 48px;
+      font-size: 11px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--text-label);
+      z-index: 10;
+    }
+
+    /* ── Lock screen ── */
+    .lock {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 100px 24px 60px;
+      text-align: center;
+    }
+
+    .lock__label {
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 18px;
+    }
+
+    .lock__title {
+      font-family: var(--font-heading);
+      font-size: clamp(28px, 6vw, 44px);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.05;
+      color: var(--text-primary);
+    }
+
+    .lock__sub {
+      margin-top: 12px;
+      font-size: 12px;
+      color: var(--text-label);
+      line-height: 1.7;
+      max-width: 380px;
+    }
+
+    .lock__form {
+      margin-top: 34px;
+      display: flex;
+      gap: 8px;
+      width: 100%;
+      max-width: 340px;
+    }
+
+    .lock__input {
+      flex: 1;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--text-primary);
+      font-size: 13px;
+      letter-spacing: 0.06em;
+      padding: 12px 14px;
+      outline: none;
+      transition: border-color 0.3s ease;
+    }
+    .lock__input::placeholder { color: var(--text-label); letter-spacing: 0.06em; }
+    .lock__input:focus { border-color: var(--accent); }
+
+    .lock__btn {
+      background: transparent;
+      border: 1px solid var(--accent);
+      border-radius: var(--radius);
+      color: var(--accent);
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 12px 18px;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+    .lock__btn:hover { background: var(--accent); color: var(--bg-page); }
+
+    .lock__err {
+      margin-top: 14px;
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      color: #e06c6c;
+      min-height: 16px;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+    .lock__err.show { opacity: 1; }
+
+    .shake { animation: shake 0.35s ease; }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-6px); }
+      40% { transform: translateX(6px); }
+      60% { transform: translateX(-4px); }
+      80% { transform: translateX(4px); }
+    }
+
+    /* ── Trip container ── */
+    .trip {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 110px 48px 80px;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.5s var(--ease-out), transform 0.5s var(--ease-out);
+    }
+    .trip.in { opacity: 1; transform: none; }
+
+    .trip__label {
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .trip__title {
+      margin-top: 10px;
+      font-family: var(--font-heading);
+      font-size: clamp(30px, 7vw, 52px);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1;
+      color: var(--text-primary);
+    }
+
+    .trip__intro {
+      margin-top: 16px;
+      max-width: 560px;
+      font-size: 12.5px;
+      line-height: 1.75;
+      color: var(--text-body);
+    }
+
+    .trip__stats {
+      margin-top: 26px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .stat {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--bg-card);
+      padding: 10px 14px;
+    }
+    .stat__k {
+      display: block;
+      font-size: 9px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-label);
+    }
+    .stat__v {
+      display: block;
+      margin-top: 4px;
+      font-family: var(--font-heading);
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+    }
+
+    /* ── Section heading ── */
+    .sect {
+      margin-top: 64px;
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+    }
+    .sect__t {
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-label);
+      white-space: nowrap;
+    }
+    .sect__rule {
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ── Map ── */
+    .map-scroll {
+      margin-top: 22px;
+      overflow-x: auto;
+      overflow-y: hidden;
+      -webkit-overflow-scrolling: touch;
+    }
+    .map-svg {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    /* Number key — only needed on small screens, where map labels are hidden */
+    .map-key {
+      display: none;
+      flex-wrap: wrap;
+      gap: 6px 14px;
+      margin-top: 16px;
+    }
+    .map-key li {
+      list-style: none;
+      font-size: 11px;
+      letter-spacing: 0.04em;
+      color: var(--text-body);
+      white-space: nowrap;
+    }
+    .map-key b {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 17px;
+      height: 17px;
+      margin-right: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: var(--bg-page);
+      font-size: 9px;
+      font-weight: 700;
+      vertical-align: -3px;
+    }
+
+    .coast {
+      fill: rgba(237, 242, 239, 0.045);
+      stroke: rgba(237, 242, 239, 0.3);
+      stroke-width: 1.6;
+      stroke-linejoin: round;
+    }
+
+    .seg {
+      fill: none;
+      stroke: var(--accent);
+      stroke-width: 2.4;
+      stroke-dasharray: 7 5;
+      stroke-linecap: round;
+      opacity: 0.55;
+      transition: opacity 0.25s ease, stroke-width 0.25s ease;
+    }
+    .seg.active { opacity: 1; stroke-width: 4; }
+
+    .seg--out {
+      stroke: var(--text-label);
+      stroke-dasharray: 4 6;
+      opacity: 0.5;
+    }
+
+    .stop circle {
+      fill: var(--accent);
+      stroke: var(--bg-page);
+      stroke-width: 2.5;
+      transition: r 0.25s var(--ease-out);
+    }
+    .stop text.num {
+      fill: #2b2836;
+      font-family: "Space Mono", monospace;
+      font-size: 15px;
+      font-weight: 700;
+      text-anchor: middle;
+      dominant-baseline: central;
+      pointer-events: none;
+    }
+    .stop text.nm {
+      fill: var(--text-primary);
+      font-family: "Space Mono", monospace;
+      font-size: 19px;
+      letter-spacing: 0.08em;
+      text-anchor: middle;
+      opacity: 0.75;
+      transition: opacity 0.25s ease;
+    }
+    .stop.active circle { r: 17; }
+    .stop.active text.nm { opacity: 1; }
+
+    .geo {
+      fill: var(--text-label);
+      font-family: "Space Mono", monospace;
+      font-size: 19px;
+      letter-spacing: 0.22em;
+      opacity: 0.5;
+      text-anchor: middle;
+    }
+    .peak { fill: none; stroke: rgba(237, 242, 239, 0.5); stroke-width: 1.6; }
+    .geo.edge {
+      font-size: 16px;
+      letter-spacing: 0.14em;
+      text-anchor: end;
+    }
+    .peak-lbl {
+      fill: var(--text-primary);
+      font-family: "Space Mono", monospace;
+      font-size: 16px;
+      letter-spacing: 0.1em;
+      opacity: 0.55;
+      text-anchor: middle;
+    }
+
+    /* ── Days ── */
+    .days { margin-top: 22px; }
+
+    .day {
+      position: relative;
+      display: grid;
+      grid-template-columns: 54px 1fr;
+      gap: 18px;
+      padding: 22px 22px 22px 0;
+      border-top: 1px solid var(--border);
+      transition: background 0.3s ease;
+    }
+    .day:last-child { border-bottom: 1px solid var(--border); }
+    .day:hover { background: rgba(237, 242, 239, 0.035); }
+
+    .day__rail {
+      display: flex;
+      justify-content: center;
+      padding-top: 2px;
+    }
+
+    .day__num {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      border: 1px solid var(--border-hover);
+      font-size: 12px;
+      color: var(--text-label);
+      transition: border-color 0.3s ease, color 0.3s ease, background 0.3s ease;
+    }
+    .day:hover .day__num {
+      border-color: var(--accent);
+      color: var(--bg-page);
+      background: var(--accent);
+    }
+
+    .day__head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .day__date {
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .day__dist {
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-label);
+      white-space: nowrap;
+    }
+
+    .day__route {
+      margin-top: 8px;
+      font-family: var(--font-heading);
+      font-size: 19px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      color: var(--text-primary);
+    }
+
+    .day__desc {
+      margin-top: 7px;
+      font-size: 12.5px;
+      line-height: 1.65;
+      color: var(--text-body);
+    }
+
+    .day__seen {
+      margin-top: 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .tag {
+      font-size: 10px;
+      letter-spacing: 0.06em;
+      color: var(--text-body);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 4px 9px;
+      background: rgba(237, 242, 239, 0.04);
+    }
+
+    .day__sleep {
+      margin-top: 14px;
+      font-size: 11px;
+      letter-spacing: 0.04em;
+      color: var(--text-label);
+    }
+    .day__sleep b {
+      font-weight: 400;
+      color: var(--text-primary);
+    }
+    .day__sleep::before {
+      content: "▲ ";
+      color: var(--accent);
+    }
+
+    .day__note {
+      margin-top: 12px;
+      font-size: 11px;
+      line-height: 1.65;
+      color: var(--text-label);
+      border-left: 1px solid var(--accent);
+      padding-left: 12px;
+    }
+
+    /* ── Closing note ── */
+    .note {
+      margin-top: 46px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--bg-card);
+      padding: 22px;
+    }
+    .note h3 {
+      font-family: var(--font-heading);
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: var(--text-primary);
+    }
+    .note p {
+      margin-top: 9px;
+      font-size: 12px;
+      line-height: 1.75;
+      color: var(--text-body);
+    }
+    .note a { color: var(--accent); border-bottom: 1px solid transparent; }
+    .note a:hover { border-bottom-color: var(--accent); }
+
+    .signoff {
+      margin-top: 34px;
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-label);
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      .back { top: 16px; left: 20px; }
+      .label-tr { top: 16px; right: 20px; }
+      .crosshair { display: none; }
+      .trip { padding: 84px 20px 60px; }
+      .lock { padding: 84px 20px 50px; }
+
+      /* Whole loop visible at a glance — drop the place names, scale the
+         numbered stops up, and key the numbers to the day list below. */
+      .map-key { display: flex; }
+      .stop text.nm { display: none; }
+      .stop {
+        transform-box: fill-box;
+        transform-origin: center;
+        transform: scale(1.85);
+      }
+      .stop.active { transform: scale(2.15); }
+      .geo { font-size: 27px; letter-spacing: 0.14em; }
+      .geo.edge { font-size: 23px; letter-spacing: 0.08em; }
+      .peak-lbl { font-size: 23px; letter-spacing: 0.08em; transform: translateX(38px); }
+      .seg { stroke-width: 4.5; stroke-dasharray: 11 8; }
+      .seg.active { stroke-width: 7; }
+      .coast { stroke-width: 2.8; }
+      .day {
+        grid-template-columns: 40px 1fr;
+        gap: 12px;
+        padding: 20px 0;
+      }
+      .day__num { width: 26px; height: 26px; font-size: 11px; }
+      .day__route { font-size: 17px; }
+      .sect { margin-top: 48px; }
+    }
+  </style>
+  <script>
+    !function(t,e){var o,n,p,r;e.__SV||(window.posthog && window.posthog.__loaded)||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="Ei Ni init zi Gi Nr Ui Xi Vi capture calculateEventProperties tn register register_once register_for_session unregister unregister_for_session an getFeatureFlag getFeatureFlagPayload getFeatureFlagResult isFeatureEnabled reloadFeatureFlags updateFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSurveysLoaded onSessionId getSurveys getActiveMatchingSurveys renderSurvey displaySurvey cancelPendingSurvey canRenderSurvey canRenderSurveyAsync ln identify setPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags reset setIdentity clearIdentity get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording sessionRecordingStarted captureException addExceptionStep captureLog startExceptionAutocapture stopExceptionAutocapture loadToolbar get_property getSessionProperty nn Qi createPersonProfile setInternalOrTestUser sn qi cn opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing get_explicit_consent_status is_capturing clear_opt_in_out_capturing Ji debug Fr rn getPageViewId captureTraceFeedback captureTraceMetric Bi".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+    posthog.init('phc_zjxCNyRPxcSqKJhNweZpvUUTRdoZ7nadYLrGGYNCsGDE', {
+        api_host: 'https://us.i.posthog.com',
+        defaults: '2026-01-30',
+        person_profiles: 'identified_only',
+    })
+  </script>
+</head>
+
+<body>
+<main id="swup" class="transition-fade">
+
+  <a href="index.html" class="back">Back</a>
+  <span class="label-tr" id="label-tr">Private</span>
+
+  <!-- ═══ Lock screen ═══ -->
+  <section class="lock" id="lock">
+    <span class="lock__label">Private</span>
+    <h1 class="lock__title">Iceland</h1>
+    <p class="lock__sub">
+      Where I am, day by day. Family only — enter the password I sent you.
+    </p>
+
+    <form class="lock__form" id="lock-form" autocomplete="off">
+      <input class="lock__input" id="pw" type="password" placeholder="password"
+             autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" />
+      <button class="lock__btn" type="submit">Enter</button>
+    </form>
+    <p class="lock__err" id="err">Wrong password</p>
+  </section>
+
+  <!-- ═══ Itinerary ═══ -->
+  <section class="trip" id="trip" hidden>
+
+    <span class="trip__label">26 Aug — 1 Sep · Iceland</span>
+    <h1 class="trip__title">Snæfellsnes<br />by bike</h1>
+    <p class="trip__intro">
+      Seven days riding a loop around the Snæfellsnes peninsula in west Iceland — out from
+      Borgarnes along the south coast, around the glacier at the western tip, back east along
+      Breiðafjörður, then south over the mountain road and home to Borgarnes for the flight.
+      Here's where I'll be each night.
+    </p>
+
+    <div class="trip__stats">
+      <div class="stat"><span class="stat__k">Days</span><span class="stat__v">7</span></div>
+      <div class="stat"><span class="stat__k">Riding</span><span class="stat__v">~200 mi</span></div>
+      <div class="stat"><span class="stat__k">Start / End</span><span class="stat__v">Borgarnes</span></div>
+      <div class="stat"><span class="stat__k">Flight home</span><span class="stat__v">Mon 1 Sep · 19:20</span></div>
+    </div>
+
+    <!-- ── Map ── -->
+    <div class="sect">
+      <span class="sect__t">The route</span>
+      <span class="sect__rule"></span>
+    </div>
+
+    <div class="map-scroll">
+      <svg class="map-svg" viewBox="0 0 1000 745" role="img"
+           aria-label="Stylised map of the Snæfellsnes peninsula showing the six overnight stops">
+
+        <!-- Coastline -->
+        <path class="coast" d="M22,273 L50,255 L88,243 L125,236 L150,250 L171,264 L210,255 L242,257
+          L300,248 L345,232 L373,243 L410,222 L440,206 L470,196 L506,175 L540,160 L560,130 L585,100
+          L604,77 L640,95 L680,105 L726,124 L780,160 L836,206 L875,255 L902,309 L925,400 L940,500
+          L959,630 L930,600 L902,567 L870,520 L840,480 L814,464 L760,430 L682,412 L620,408 L550,402
+          L500,392 L462,381 L410,376 L352,371 L330,360 L308,350 L280,368 L242,381 L211,400 L170,412
+          L132,422 L100,418 L84,412 L55,385 L35,350 L25,310 Z" />
+
+        <!-- Sea labels -->
+        <text class="geo" x="430" y="112">BREIÐAFJÖRÐUR</text>
+        <text class="geo" x="430" y="510">FAXAFLÓI</text>
+
+        <!-- Glacier -->
+        <path class="peak" d="M118,332 L142,306 L166,332 Z" />
+        <text class="peak-lbl" x="142" y="360">SNÆFELLSJÖKULL</text>
+
+        <!-- Day segments -->
+        <path class="seg" data-seg="1" d="M959,630 L900,470 L820,390 L784,364" />
+        <path class="seg" data-seg="2" d="M784,364 L700,368 L560,372 L450,357 L380,350 L314,338 L250,352 L213,364 L211,400" />
+        <path class="seg" data-seg="3" d="M211,400 L132,422 L87,409 L55,360 L60,300 L110,262 L140,247 L171,264" />
+        <path class="seg" data-seg="4" d="M171,264 L250,258 L330,236 L373,240 L450,205 L502,180 L560,120 L604,77" />
+        <path class="seg" data-seg="5" d="M604,77 L590,150 L607,237 L650,290 L720,333" />
+        <path class="seg" data-seg="6" d="M720,333 L790,380 L850,450 L900,530 L959,630" />
+        <path class="seg seg--out" data-seg="7" d="M959,630 L985,672" />
+
+        <!-- Stops -->
+        <g class="stop" data-seg="1">
+          <circle cx="784" cy="364" r="13" />
+          <text class="num" x="784" y="364">1</text>
+          <text class="nm" x="784" y="400">ELDBORG</text>
+        </g>
+        <g class="stop" data-seg="2">
+          <circle cx="211" cy="400" r="13" />
+          <text class="num" x="211" y="400">2</text>
+          <text class="nm" x="211" y="440">ARNARSTAPI</text>
+        </g>
+        <g class="stop" data-seg="3">
+          <circle cx="171" cy="264" r="13" />
+          <text class="num" x="171" y="264">3</text>
+          <text class="nm" x="163" y="228">ÓLAFSVÍK</text>
+        </g>
+        <g class="stop" data-seg="4">
+          <circle cx="604" cy="77" r="13" />
+          <text class="num" x="604" y="77">4</text>
+          <text class="nm" x="604" y="46">STYKKISHÓLMUR</text>
+        </g>
+        <g class="stop" data-seg="5">
+          <circle cx="720" cy="333" r="13" />
+          <text class="num" x="720" y="333">5</text>
+          <text class="nm" x="720" y="303">VEGAMÓT</text>
+        </g>
+        <g class="stop" data-seg="6">
+          <circle cx="959" cy="630" r="13" />
+          <text class="num" x="959" y="630">6</text>
+          <text class="nm" x="944" y="600" style="text-anchor:end">BORGARNES</text>
+        </g>
+
+        <text class="geo edge" x="940" y="700">START + FINISH</text>
+        <text class="geo edge" x="940" y="732">→ REYKJAVÍK · KEF</text>
+      </svg>
+    </div>
+    <ul class="map-key">
+      <li><b>1</b>Eldborg</li>
+      <li><b>2</b>Arnarstapi</li>
+      <li><b>3</b>Ólafsvík</li>
+      <li><b>4</b>Stykkishólmur</li>
+      <li><b>5</b>Vegamót</li>
+      <li><b>6</b>Borgarnes</li>
+    </ul>
+
+    <!-- ── Day by day ── -->
+    <div class="sect">
+      <span class="sect__t">Day by day</span>
+      <span class="sect__rule"></span>
+    </div>
+
+    <div class="days">
+
+      <article class="day" data-seg="1">
+        <div class="day__rail"><span class="day__num">1</span></div>
+        <div>
+          <div class="day__head">
+            <span class="day__date">Tue 26 Aug</span>
+            <span class="day__dist">28 mi</span>
+          </div>
+          <h2 class="day__route">Reykjavík → Borgarnes → Eldborg</h2>
+          <p class="day__desc">Bus 50 up to Borgarnes, then on the bike and west along the south side of the peninsula.</p>
+          <div class="day__seen">
+            <span class="tag">Gerðuberg basalt columns</span>
+            <span class="tag">Eldborg crater</span>
+          </div>
+          <p class="day__sleep">Sleeping — <b>wild camp near Eldborg</b></p>
+          <p class="day__note">On a bus by 13:30 means riding by 15:00, with daylight until about 20:45.</p>
+        </div>
+      </article>
+
+      <article class="day" data-seg="2">
+        <div class="day__rail"><span class="day__num">2</span></div>
+        <div>
+          <div class="day__head">
+            <span class="day__date">Wed 27 Aug</span>
+            <span class="day__dist">34 mi</span>
+          </div>
+          <h2 class="day__route">Eldborg → Arnarstapi</h2>
+          <p class="day__desc">West along the whole south coast to the fishing village of Arnarstapi, under the glacier.</p>
+          <div class="day__seen">
+            <span class="tag">Ytri Tunga seals</span>
+            <span class="tag">Búðir black church</span>
+            <span class="tag">Rauðfeldsgjá gorge</span>
+          </div>
+          <p class="day__sleep">Sleeping — <b>campsite in Arnarstapi</b></p>
+        </div>
+      </article>
+
+      <article class="day" data-seg="3">
+        <div class="day__rail"><span class="day__num">3</span></div>
+        <div>
+          <div class="day__head">
+            <span class="day__date">Thu 28 Aug</span>
+            <span class="day__dist">28 mi</span>
+          </div>
+          <h2 class="day__route">Arnarstapi → Ólafsvík</h2>
+          <p class="day__desc">Around the western tip through Snæfellsjökull National Park, then up onto the north coast.</p>
+          <div class="day__seen">
+            <span class="tag">Lóndrangar sea stacks</span>
+            <span class="tag">Djúpalónssandur</span>
+            <span class="tag">Saxhóll crater</span>
+            <span class="tag">Snæfellsjökull</span>
+          </div>
+          <p class="day__sleep">Sleeping — <b>campsite in Ólafsvík</b> (national park, so no wild camping)</p>
+        </div>
+      </article>
+
+      <article class="day" data-seg="4">
+        <div class="day__rail"><span class="day__num">4</span></div>
+        <div>
+          <div class="day__head">
+            <span class="day__date">Fri 29 Aug</span>
+            <span class="day__dist">42 mi</span>
+          </div>
+          <h2 class="day__route">Ólafsvík → Grundarfjörður → Stykkishólmur</h2>
+          <p class="day__desc">The long day. East along Breiðafjörður, hitting Kirkjufell mid-ride rather than waiting for evening light.</p>
+          <div class="day__seen">
+            <span class="tag">Kirkjufell</span>
+            <span class="tag">Berserkjahraun lava field</span>
+          </div>
+          <p class="day__sleep">Sleeping — <b>wild camp near Stykkishólmur</b></p>
+        </div>
+      </article>
+
+      <article class="day" data-seg="5">
+        <div class="day__rail"><span class="day__num">5</span></div>
+        <div>
+          <div class="day__head">
+            <span class="day__date">Sat 30 Aug</span>
+            <span class="day__dist">34 mi</span>
+          </div>
+          <h2 class="day__route">Stykkishólmur → Vegamót</h2>
+          <p class="day__desc">South on Route 56, over the Vatnaleið pass across the spine of the peninsula, down to Vegamót.</p>
+          <div class="day__seen">
+            <span class="tag">Vatnaleið pass</span>
+          </div>
+          <p class="day__sleep">Sleeping — <b>wild camp near Vegamót</b></p>
+        </div>
+      </article>
+
+      <article class="day" data-seg="6">
+        <div class="day__rail"><span class="day__num">6</span></div>
+        <div>
+          <div class="day__head">
+            <span class="day__date">Sun 31 Aug</span>
+            <span class="day__dist">34 mi</span>
+          </div>
+          <h2 class="day__route">Vegamót → Borgarnes</h2>
+          <p class="day__desc">Last riding day — east on Route 54 to close the loop back at Borgarnes.</p>
+          <p class="day__sleep">Sleeping — <b>wild camp or campsite in Borgarnes</b></p>
+        </div>
+      </article>
+
+      <article class="day" data-seg="7">
+        <div class="day__rail"><span class="day__num">7</span></div>
+        <div>
+          <div class="day__head">
+            <span class="day__date">Mon 1 Sep</span>
+            <span class="day__dist">Travel day</span>
+          </div>
+          <h2 class="day__route">Borgarnes → Reykjavík → KEF</h2>
+          <p class="day__desc">Early Bus 50 from Borgarnes to Mjódd, collect the bike box, pack the bike, then the Flybus out to Keflavík.</p>
+          <div class="day__seen">
+            <span class="tag">Flight 19:20</span>
+          </div>
+          <p class="day__sleep">Sleeping — <b>on the plane, hopefully</b></p>
+        </div>
+      </article>
+
+    </div>
+
+    <div class="note">
+      <h3>If you're checking on me</h3>
+      <p>
+        This is the plan, not a promise — Icelandic weather moves things around, so if a day
+        slips I'll just be one stop behind this list. Wild camping nights mean no address and
+        often no signal until the next town. Iceland's emergency number is <b>112</b>, and
+        <a href="https://safetravel.is" target="_blank" rel="noopener">safetravel.is</a> tracks
+        road and weather conditions across the peninsula.
+      </p>
+    </div>
+
+    <p class="signoff">Snæfellsnes · 26 Aug — 1 Sep</p>
+  </section>
+
+  <script>
+  (function () {
+    // ═══════════════════════════════════════════════════════
+    // PASSWORD GATE
+    //
+    // This is a soft lock — it keeps the page out of search and
+    // away from casual visitors, but the itinerary is in this file,
+    // so anyone who views the page source could read it.
+    //
+    // TO CHANGE THE PASSWORD: replace PASS_HASH below with the
+    // SHA-256 hash of your new password, lowercased and trimmed.
+    //   node -e "console.log(require('crypto').createHash('sha256').update('yourpassword').digest('hex'))"
+    //
+    // Current password: eldborg
+    // ═══════════════════════════════════════════════════════
+    var PASS_HASH = '0632c11b701271d7e7ee09307fa3982ad75bf0b9b539457127275df7e959c39a';
+    var STORE_KEY = 'iceland_unlocked';
+
+    var lock  = document.getElementById('lock');
+    var trip  = document.getElementById('trip');
+    var form  = document.getElementById('lock-form');
+    var input = document.getElementById('pw');
+    var err   = document.getElementById('err');
+    var labelTR = document.getElementById('label-tr');
+
+    function sha256(str) {
+      var bytes = new TextEncoder().encode(str);
+      return crypto.subtle.digest('SHA-256', bytes).then(function (buf) {
+        return Array.prototype.map.call(new Uint8Array(buf), function (b) {
+          return b.toString(16).padStart(2, '0');
+        }).join('');
+      });
+    }
+
+    function unlock(remember) {
+      if (remember) {
+        try { localStorage.setItem(STORE_KEY, '1'); } catch (e) {}
+      }
+      lock.hidden = true;
+      lock.style.display = 'none';
+      trip.hidden = false;
+      labelTR.textContent = 'Iceland';
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () { trip.classList.add('in'); });
+      });
+      wireMap();
+    }
+
+    // Already unlocked on this device?
+    var remembered = false;
+    try { remembered = localStorage.getItem(STORE_KEY) === '1'; } catch (e) {}
+    if (remembered) unlock(false);
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var attempt = (input.value || '').trim().toLowerCase();
+      if (!attempt) return;
+
+      if (!window.crypto || !crypto.subtle) {
+        err.textContent = 'This browser can’t check the password — try Safari or Chrome.';
+        err.classList.add('show');
+        return;
+      }
+
+      sha256(attempt).then(function (hash) {
+        if (hash === PASS_HASH) {
+          err.classList.remove('show');
+          unlock(true);
+        } else {
+          err.textContent = 'Wrong password';
+          err.classList.add('show');
+          form.classList.remove('shake');
+          void form.offsetWidth;
+          form.classList.add('shake');
+          input.value = '';
+          input.focus();
+        }
+      });
+    });
+
+    // ═══════════════════════════════════════════════════════
+    // MAP ↔ DAY LIST HIGHLIGHTING
+    // ═══════════════════════════════════════════════════════
+    var mapWired = false;
+    function wireMap() {
+      if (mapWired) return;
+      mapWired = true;
+
+      var days = trip.querySelectorAll('.day');
+      Array.prototype.forEach.call(days, function (day) {
+        var id = day.getAttribute('data-seg');
+        var seg = trip.querySelector('.seg[data-seg="' + id + '"]');
+        var stop = trip.querySelector('.stop[data-seg="' + id + '"]');
+
+        function on()  { if (seg) seg.classList.add('active');    if (stop) stop.classList.add('active'); }
+        function off() { if (seg) seg.classList.remove('active'); if (stop) stop.classList.remove('active'); }
+
+        day.addEventListener('mouseenter', on);
+        day.addEventListener('mouseleave', off);
+        day.addEventListener('touchstart', on, { passive: true });
+        day.addEventListener('touchend', off, { passive: true });
+
+        if (stop) {
+          stop.addEventListener('mouseenter', on);
+          stop.addEventListener('mouseleave', off);
+        }
+      });
+    }
+  })();
+  </script>
+
+</main>
+
+<script src="https://unpkg.com/swup@4"></script>
+<script src="https://unpkg.com/@swup/scripts-plugin@2"></script>
+<script src="cursor.js"></script>
+<script src="router.js"></script>
+<script src="//instant.page/5.2.0" type="module" integrity="sha384-jnZcgoEq3zzkwe3XfuO2R8yA2w/1O/hH3y11hDbs0qjGvC7R4o0Dkiu17H6o0E3D"></script>
+</body>
+
+</html>
